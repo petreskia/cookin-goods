@@ -1,0 +1,120 @@
+/* Fonts */
+@font-face {
+  font-family: "PP Mori";
+  src: url("fonts/PPMori-Regular.woff2") format("woff2"),
+    /* Modern browsers */ url("fonts/PPMori-Regular.otf") format("opentype"); /* Fallback */
+  font-weight: 200;
+}
+
+/* CSS Resets */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "PP Mori", sans-serif;
+  margin: 0;
+  color: #fdfdfc;
+  background-color: #191818;
+}
+
+h1,
+h2,
+h3,
+p,
+ul {
+  margin: 0;
+}
+/* Remove default list styles */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* Remove default link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* NavBar */
+.navbar {
+  height: 50px;
+  width: 454px;
+  padding: 10px 12px;
+  background-color: #444443;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.logo {
+  padding: 5px 0 0 0;
+}
+.logo img {
+  width: 171.56px;
+  height: 40px;
+}
+.contact-btn {
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  font-size: 18px;
+  color: #fdfdfc;
+  font-family: "PP Mori", sans-serif;
+}
+/* Banner */
+.banner {
+  display: flex;
+  justify-content: center;
+  font-size: 56px;
+  text-align: center;
+}
+.banner-content {
+  width: 50%;
+  padding: 210px 0 150px 0;
+}
+.banner-content h2 {
+  font-size: 56px;
+  font-weight: 100;
+}
+/* About Section */
+.about-section {
+  display: flex;
+  padding: 0 12px;
+}
+.team-info {
+  flex-basis: 33.33%;
+}
+/* Right Section - Services Info */
+.services-info {
+  flex-basis: 66.67%;
+  display: flex;
+}
+.service-card {
+  flex-basis: 50%;
+}
+.card-inner {
+  padding: 1rem;
+  background-color: #3a3938;
+  text-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  line-height: 1.3;
+}
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
