@@ -215,9 +215,11 @@ img {
 .projects-slider {
   display: flex;
   gap: 15px;
-  overflow-x: scroll;
-  scrollbar-width: none; /* Hides scrollbar for Firefox */
-  -ms-overflow-style: none; /* Hides scrollbar for IE/Edge */
+  margin-bottom: 24px;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  scroll-snap-type: x mandatory; /* Enables snapping */
+  scroll-behavior: smooth; /* Smooth scrolling */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
 }
 
 .projects-slider::-webkit-scrollbar {
@@ -227,4 +229,15 @@ img {
   width: 453px; /* Match image width */
   height: 302px; /* Match image height */
   border-radius: 8px; /* Optional: Add rounded corners */
+}
+.widgets-container {
+  display: flex;
+  gap: 10px;
+}
+.widget {
+  padding: 8px 10px;
+  background-color: #474646;
+  border-radius: 5px;
+  font-size: 18px;
+  opacity: 80%;
 }
