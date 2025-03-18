@@ -186,59 +186,87 @@ img {
 .service-card p {
   opacity: 70%;
 }
+
 /* Projects */
 .project {
   padding-left: 15px;
   margin-bottom: 150px;
 }
 
+.projects-slider {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  transition: scroll-left 0.3s ease-in-out;
+  margin-left: var(--slider-margin, 0);
+  cursor: pointer;
+}
+
+.projects-slider::-webkit-scrollbar {
+  display: none;
+}
+
 .project h2 {
   margin-bottom: 24px;
 }
+
 .project p {
   margin-bottom: 48px;
 }
+
 .project-info {
   width: 453px;
   font-size: 22px;
+  margin-left: var(--info-margin, 0);
 }
+
 .project-img,
 .project-img-small {
   height: 302px;
   border-radius: 5px;
 }
+
 .project-img {
   width: 453px;
 }
+
 .project-img-small {
   width: 217px;
 }
-.projects-slider {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 24px;
-  overflow-x: auto; /* Enable horizontal scrolling */
-  scroll-snap-type: x mandatory; /* Enables snapping */
-  scroll-behavior: smooth; /* Smooth scrolling */
-  scrollbar-width: none; /* Hide scrollbar in Firefox */
-}
 
-.projects-slider::-webkit-scrollbar {
-  display: none; /* Hides scrollbar for Chrome, Safari */
-}
 .project-video {
   width: 453px;
   height: 302px;
   border-radius: 5px;
+  pointer-events: none;
 }
+
 .widgets-container {
   display: flex;
   gap: 10px;
+  margin-left: var(--widgets-margin, 0); /* Use CSS variable */
 }
+
 .widget {
   padding: 8px 10px;
   background-color: #474646;
   border-radius: 5px;
   font-size: 18px;
   opacity: 80%;
+}
+
+@media (min-width: 1440px) {
+  .projects-slider {
+    --slider-margin: calc((100vw - 1440px) / 2);
+    --info-margin: calc((100vw - 1440px) / 2);
+    --widgets-margin: calc((100vw - 1440px) / 2);
+  }
+}
+
+.video-container {
+  position: relative;
 }
