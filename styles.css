@@ -44,8 +44,7 @@ img {
   height: 50px;
   width: 454px;
   padding: 10px 12px;
-  background-color: #444443;
-  opacity: 70%;
+  background-color: rgba(242, 242, 240, 0.2); /* #F2F2F0 with 20% opacity */
   border-radius: 5px;
   display: flex;
   justify-content: space-between;
@@ -54,6 +53,7 @@ img {
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
+  backdrop-filter: blur(30px); /* Background blur */
 }
 
 .logo img {
@@ -188,9 +188,10 @@ img {
 }
 /* Projects */
 .project {
-  padding: 0 15px;
+  padding-left: 15px;
   margin-bottom: 150px;
 }
+
 .project h2 {
   margin-bottom: 24px;
 }
@@ -226,9 +227,9 @@ img {
   display: none; /* Hides scrollbar for Chrome, Safari */
 }
 .project-video {
-  width: 453px; /* Match image width */
-  height: 302px; /* Match image height */
-  border-radius: 8px; /* Optional: Add rounded corners */
+  width: 453px;
+  height: 302px;
+  border-radius: 5px;
 }
 .widgets-container {
   display: flex;
