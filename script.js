@@ -1,14 +1,124 @@
 document.addEventListener("DOMContentLoaded", () => {
   const sliders = document.querySelectorAll(".projects-slider");
-  const videoOverlays = document.querySelectorAll(".video-overlay");
 
   sliders.forEach((slider, index) => {
-    console.log("Slider Index:", index, slider);
-    const cardWidth = slider.querySelector(".project-card").offsetWidth + 15;
-    const sliderWidth = slider.offsetWidth;
-    const contentWidth = slider.scrollWidth;
-    let marginRemoved = false;
-    let atStart = true;
+    let isDragging = false;
+    let startX = 0;
+    let scrollLeft = 0;
+    let initialMargin = "";
+
+    function getCardWidth(card) {
+      return card.offsetWidth + 15;
+    }
+
+    if (window.innerWidth >= 1440) {
+      initialMargin = window.getComputedStyle(slider).marginLeft;
+    }
+
+    function removeMargin() {
+      if (initialMargin) {
+        slider.style.marginLeft = "0";
+      }
+    }
+
+    slider.addEventListener("mousedown", removeMargin);
+    slider.addEventListener("touchstart", removeMargin);
+    slider.addEventListener("click", removeMargin);
+
+    slider.addEventListener(
+      "wheel",
+      (e) => {
+        e.preventDefault();
+        document.body.style.overflowY = "hidden";
+
+        window.scrollBy({
+          left: e.deltaY,
+          behavior: "smooth",
+        });
+
+        setTimeout(() => {
+          document.body.style.overflowY = "auto";
+        }, 300);
+      },
+      { passive: false }
+    );
+
+    slider.addEventListener("touchstart", (e) => {
+      isDragging = true;
+      startX = e.touches[0].pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+      slider.style.scrollBehavior = "auto";
+    });
+
+    slider.addEventListener("touchend", () => {
+      isDragging = false;
+      slider.style.scrollBehavior = "smooth";
+    });
+
+    slider.addEventListener("touchmove", (e) => {
+      if (!isDragging) return;
+      const x = e.touches[0].pageX - slider.offsetLeft;
+      const walk = (x - startX) * 1;
+      slider.scrollLeft = scrollLeft - walk;
+    });
+
+    slider.addEventListener("click", (e) => {
+      if (isDragging) {
+        return;
+      }
+
+      const clickX = e.clientX - slider.getBoundingClientRect().left;
+      const sliderCenterX = slider.offsetWidth / 2;
+      const firstCardWidth = getCardWidth(
+        slider.querySelector(".project-card")
+      );
+
+      if (clickX < sliderCenterX) {
+        slider.scrollLeft -= firstCardWidth;
+      } else {
+        slider.scrollLeft += firstCardWidth;
+      }
+    });
+
+    slider.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      isDragging = true;
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+      slider.style.scrollBehavior = "auto";
+    });
+
+    slider.addEventListener("mouseleave", () => {
+      isDragging = false;
+      slider.style.scrollBehavior = "smooth";
+    });
+
+    slider.addEventListener("mouseup", () => {
+      isDragging = false;
+      slider.style.scrollBehavior = "smooth";
+    });
+
+    slider.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 1;
+      slider.scrollLeft = scrollLeft - walk;
+    });
+
+    function smoothReturn() {
+      slider.style.scrollBehavior = "smooth";
+      slider.scrollLeft = 0;
+      setTimeout(() => {
+        slider.style.scrollBehavior = "auto";
+      }, 500);
+    }
+
+    slider.addEventListener("scroll", () => {
+      if (slider.scrollLeft === 0) {
+        slider.style.marginLeft = initialMargin;
+      }
+    });
 
     function updateMargins() {
       const sliderMargin = parseInt(window.getComputedStyle(slider).marginLeft);
@@ -24,82 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     }
-
-    // Update margins on initial load
     updateMargins();
-
-    slider.addEventListener("click", (e) => {
-      console.log("Clicked Slider Index:", index);
-      console.log("Clicked Target:", e.target);
-      console.log("Before Scroll:", slider.scrollLeft);
-      const clickX = e.clientX - slider.getBoundingClientRect().left;
-      const sliderCenterX = sliderWidth / 2;
-
-      if (clickX < sliderCenterX) {
-        slider.scrollLeft -= cardWidth;
-      } else {
-        slider.scrollLeft += cardWidth;
-      }
-
-      console.log("After Scroll:", slider.scrollLeft);
-      e.stopPropagation();
-
-      if (!marginRemoved && slider.scrollLeft !== 0) {
-        slider.style.marginLeft = "0";
-        marginRemoved = true;
-      }
-
-      if (atStart && marginRemoved) {
-        slider.style.transition = "scroll-left 0.5s ease-in-out";
-        slider.style.marginLeft = "";
-        marginRemoved = false;
-        atStart = false;
-        setTimeout(() => {
-          slider.style.transition = "";
-        }, 500);
-      }
-
-      atStart = slider.scrollLeft === 0;
-    });
-
-    slider.addEventListener("scroll", () => {
-      if (slider.scrollLeft < 0) {
-        slider.scrollLeft = 0;
-      } else if (slider.scrollLeft > contentWidth - sliderWidth) {
-        slider.scrollLeft = contentWidth - sliderWidth;
-      }
-
-      if (!marginRemoved && slider.scrollLeft !== 0) {
-        slider.style.marginLeft = "0";
-        marginRemoved = true;
-      }
-
-      atStart = slider.scrollLeft === 0;
-    });
-
-    // Update margins on resize
     window.addEventListener("resize", updateMargins);
-  });
-
-  videoOverlays.forEach((overlay) => {
-    overlay.addEventListener("click", (e) => {
-      e.preventDefault();
-      const slider = overlay.closest(".projects-slider");
-      if (slider) {
-        const sliderRect = slider.getBoundingClientRect();
-        const clickX = e.clientX - sliderRect.left;
-        const clickY = e.clientY - sliderRect.top;
-        slider.dispatchEvent(
-          new MouseEvent("click", {
-            clientX: e.clientX,
-            clientY: e.clientY,
-            bubbles: false,
-            cancelable: true,
-            view: window,
-          })
-        );
-      }
-      e.stopPropagation();
-    });
   });
 });

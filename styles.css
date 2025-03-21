@@ -100,9 +100,9 @@ img {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   scrollbar-width: none;
-  transition: scroll-left 0.3s ease-in-out;
-  margin-left: var(--slider-margin, 0);
-  cursor: pointer;
+  touch-action: pan-x;
+  user-select: none;
+  margin-left: 0; /* Reset margin on smaller screens */
 }
 
 .projects-slider::-webkit-scrollbar {
@@ -160,9 +160,9 @@ img {
 
 @media (min-width: 1440px) {
   .projects-slider {
-    --slider-margin: calc((100vw - 1440px) / 2);
-    --info-margin: calc((100vw - 1440px) / 2);
-    --widgets-margin: calc((100vw - 1440px) / 2);
+    margin-left: calc(
+      (100vw - 1440px) / 2
+    ); /* Add left margin on larger screens */
   }
 }
 
