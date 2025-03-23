@@ -104,26 +104,82 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const teamInfo = document.querySelector(".team-info");
   const servicesInfo = document.querySelector(".services-info");
+  const aboutSection = document.querySelector(".about-section");
+
+  let isFooterAtTop = false;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        isFooterAtTop = entry.isIntersecting; // Update flag based on intersection
+      });
+    },
+    { threshold: 0 }
+  );
+
+  observer.observe(aboutSection);
 
   servicesInfo.addEventListener("wheel", (event) => {
     event.preventDefault();
-    teamInfo.scrollTop += event.deltaY;
 
-    // Check if teamInfo is at the top and scrolling up
-    if (teamInfo.scrollTop === 0 && event.deltaY < 0) {
+    if (isFooterAtTop) {
+      const maxScrollTop = teamInfo.scrollHeight - teamInfo.clientHeight;
+
+      if (teamInfo.scrollTop >= maxScrollTop && event.deltaY > 0) {
+        window.scrollBy({ top: event.deltaY, behavior: "auto" });
+      } else {
+        teamInfo.scrollTop += event.deltaY;
+
+        if (teamInfo.scrollTop < 0) {
+          teamInfo.scrollTop = 0;
+        } else if (teamInfo.scrollTop > maxScrollTop) {
+          teamInfo.scrollTop = maxScrollTop;
+        }
+      }
+
+      if (teamInfo.scrollTop === 0 && event.deltaY < 0) {
+        window.scrollBy({ top: event.deltaY, behavior: "auto" });
+      }
+    } else {
       window.scrollBy({ top: event.deltaY, behavior: "auto" });
     }
   });
 
-  // Optional: Touch event handling
   servicesInfo.addEventListener("touchmove", (event) => {
     event.preventDefault();
-    teamInfo.scrollTop += event.touches[0].clientY - event.touches[0].clientY;
 
-    if (
-      teamInfo.scrollTop === 0 &&
-      event.touches[0].clientY > event.touches[0].clientY
-    ) {
+    if (isFooterAtTop) {
+      const maxScrollTop = teamInfo.scrollHeight - teamInfo.clientHeight;
+
+      if (
+        teamInfo.scrollTop >= maxScrollTop &&
+        event.touches[0].clientY < event.touches[0].clientY
+      ) {
+        window.scrollBy({
+          top: event.touches[0].clientY - event.touches[0].clientY,
+          behavior: "auto",
+        });
+      } else {
+        teamInfo.scrollTop +=
+          event.touches[0].clientY - event.touches[0].clientY;
+
+        if (teamInfo.scrollTop < 0) {
+          teamInfo.scrollTop = 0;
+        } else if (teamInfo.scrollTop > maxScrollTop) {
+          teamInfo.scrollTop = maxScrollTop;
+        }
+      }
+
+      if (
+        teamInfo.scrollTop === 0 &&
+        event.touches[0].clientY > event.touches[0].clientY
+      ) {
+        window.scrollBy({
+          top: event.touches[0].clientY - event.touches[0].clientY,
+          behavior: "auto",
+        });
+      }
+    } else {
       window.scrollBy({
         top: event.touches[0].clientY - event.touches[0].clientY,
         behavior: "auto",
