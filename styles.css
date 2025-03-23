@@ -175,12 +175,13 @@ img {
   display: flex;
   justify-content: center;
   gap: 15px;
-  height: calc(100vh - 100px);
   padding: 0 15px;
+  height: 100vh;
 }
 .about-section h2 {
   font-size: 36px;
   padding-bottom: 30px;
+  margin-top: 40px;
 }
 /* Left Section - Team Info */
 .team-info {
@@ -243,7 +244,7 @@ img {
 .services-info {
   display: flex;
   gap: 15px;
-  padding-top: 88.19px;
+  padding-top: 128.19px;
 }
 
 /* .service-card {

@@ -7,41 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let scrollLeft = 0;
     let initialMargin = "";
 
-    function getCardWidth(card) {
-      return card.offsetWidth + 15;
-    }
-
     if (window.innerWidth >= 1440) {
       initialMargin = window.getComputedStyle(slider).marginLeft;
     }
-
-    function removeMargin() {
-      if (initialMargin) {
-        slider.style.marginLeft = "0";
-      }
-    }
-
-    slider.addEventListener("mousedown", removeMargin);
-    slider.addEventListener("touchstart", removeMargin);
-    slider.addEventListener("click", removeMargin);
-
-    slider.addEventListener(
-      "wheel",
-      (e) => {
-        e.preventDefault();
-        document.body.style.overflowY = "hidden";
-
-        window.scrollBy({
-          left: e.deltaY,
-          behavior: "smooth",
-        });
-
-        setTimeout(() => {
-          document.body.style.overflowY = "auto";
-        }, 300);
-      },
-      { passive: false }
-    );
 
     slider.addEventListener("touchstart", (e) => {
       isDragging = true;
@@ -69,14 +37,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const clickX = e.clientX - slider.getBoundingClientRect().left;
       const sliderCenterX = slider.offsetWidth / 2;
-      const firstCardWidth = getCardWidth(
-        slider.querySelector(".project-card")
-      );
+      const fixedScrollAmount = 453;
 
       if (clickX < sliderCenterX) {
-        slider.scrollLeft -= firstCardWidth;
+        slider.scrollLeft -= fixedScrollAmount;
       } else {
-        slider.scrollLeft += firstCardWidth;
+        slider.scrollLeft += fixedScrollAmount;
       }
     });
 
@@ -114,12 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 500);
     }
 
-    slider.addEventListener("scroll", () => {
-      if (slider.scrollLeft === 0) {
-        slider.style.marginLeft = initialMargin;
-      }
-    });
-
     function updateMargins() {
       const sliderMargin = parseInt(window.getComputedStyle(slider).marginLeft);
       const project = slider.closest(".project");
@@ -136,5 +96,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     updateMargins();
     window.addEventListener("resize", updateMargins);
+  });
+});
+
+// About Section scroll
+
+document.addEventListener("DOMContentLoaded", () => {
+  const teamInfo = document.querySelector(".team-info");
+  const servicesInfo = document.querySelector(".services-info");
+
+  servicesInfo.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    teamInfo.scrollTop += event.deltaY;
+
+    // Check if teamInfo is at the top and scrolling up
+    if (teamInfo.scrollTop === 0 && event.deltaY < 0) {
+      window.scrollBy({ top: event.deltaY, behavior: "auto" });
+    }
+  });
+
+  // Optional: Touch event handling
+  servicesInfo.addEventListener("touchmove", (event) => {
+    event.preventDefault();
+    teamInfo.scrollTop += event.touches[0].clientY - event.touches[0].clientY;
+
+    if (
+      teamInfo.scrollTop === 0 &&
+      event.touches[0].clientY > event.touches[0].clientY
+    ) {
+      window.scrollBy({
+        top: event.touches[0].clientY - event.touches[0].clientY,
+        behavior: "auto",
+      });
+    }
   });
 });
