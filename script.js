@@ -1954,222 +1954,222 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ===== About Section Scroll Enhancement =====
-  const teamInfo = document.querySelector(".team-info");
-  const servicesInfo = document.querySelector(".services-info");
-  const aboutSection = document.querySelector(".about-section");
+  // // ===== About Section Scroll Enhancement =====
+  // const teamInfo = document.querySelector(".team-info");
+  // const servicesInfo = document.querySelector(".services-info");
+  // const aboutSection = document.querySelector(".about-section");
 
-  if (teamInfo && servicesInfo && aboutSection) {
-    // Check if we're on a desktop device (larger than tablets)
-    const isDesktop = window.innerWidth >= 992;
+  // if (teamInfo && servicesInfo && aboutSection) {
+  //   // Check if we're on a desktop device (larger than tablets)
+  //   const isDesktop = window.innerWidth >= 992;
 
-    if (!isDesktop) {
-      // For mobile and tablets, use simple native scrolling
-      teamInfo.style.overflow = "auto";
-      teamInfo.style.webkitOverflowScrolling = "touch";
+  //   if (!isDesktop) {
+  //     // For mobile and tablets, use simple native scrolling
+  //     teamInfo.style.overflow = "auto";
+  //     teamInfo.style.webkitOverflowScrolling = "touch";
 
-      // Make sure the about section has normal scroll behavior
-      aboutSection.style.overflow = "visible";
-      aboutSection.style.height = "auto";
+  //     // Make sure the about section has normal scroll behavior
+  //     aboutSection.style.overflow = "visible";
+  //     aboutSection.style.height = "auto";
 
-      // Ensure services info section has normal scroll behavior
-      servicesInfo.style.position = "static";
-    } else {
-      // Desktop version with custom scroll handling
-      let isAboutSectionAtTop = false;
+  //     // Ensure services info section has normal scroll behavior
+  //     servicesInfo.style.position = "static";
+  //   } else {
+  //     // Desktop version with custom scroll handling
+  //     let isAboutSectionAtTop = false;
 
-      // Set up the about section for desktop
-      aboutSection.style.height = "100vh";
+  //     // Set up the about section for desktop
+  //     aboutSection.style.height = "100vh";
 
-      // Set up team-info for scrolling
-      teamInfo.style.overflow = "auto";
-      teamInfo.style.maxHeight = "100%";
-      teamInfo.style.scrollBehavior = "smooth";
+  //     // Set up team-info for scrolling
+  //     teamInfo.style.overflow = "auto";
+  //     teamInfo.style.maxHeight = "100%";
+  //     teamInfo.style.scrollBehavior = "smooth";
 
-      // Create an observer to detect when the about section reaches the top of the viewport
-      const aboutObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const aboutRect = aboutSection.getBoundingClientRect();
-            isAboutSectionAtTop = aboutRect.top <= 0;
+  //     // Create an observer to detect when the about section reaches the top of the viewport
+  //     const aboutObserver = new IntersectionObserver(
+  //       (entries) => {
+  //         entries.forEach((entry) => {
+  //           const aboutRect = aboutSection.getBoundingClientRect();
+  //           isAboutSectionAtTop = aboutRect.top <= 0;
 
-            if (isAboutSectionAtTop) {
-              document.body.classList.add("about-at-top");
-              aboutSection.style.position = "fixed";
-              aboutSection.style.top = "0";
-              aboutSection.style.left = "0";
-              aboutSection.style.width = "100%";
-              aboutSection.style.zIndex = "10";
+  //           if (isAboutSectionAtTop) {
+  //             document.body.classList.add("about-at-top");
+  //             aboutSection.style.position = "fixed";
+  //             aboutSection.style.top = "0";
+  //             aboutSection.style.left = "0";
+  //             aboutSection.style.width = "100%";
+  //             aboutSection.style.zIndex = "10";
 
-              // Add a spacer to prevent content jump
-              if (!document.getElementById("about-spacer")) {
-                const spacer = document.createElement("div");
-                spacer.id = "about-spacer";
-                spacer.style.height = "100vh";
-                aboutSection.parentNode.insertBefore(spacer, aboutSection);
-              }
+  //             // Add a spacer to prevent content jump
+  //             if (!document.getElementById("about-spacer")) {
+  //               const spacer = document.createElement("div");
+  //               spacer.id = "about-spacer";
+  //               spacer.style.height = "100vh";
+  //               aboutSection.parentNode.insertBefore(spacer, aboutSection);
+  //             }
 
-              // Fix the services info in place
-              servicesInfo.style.position = "sticky";
-              servicesInfo.style.top = "0";
-            } else {
-              document.body.classList.remove("about-at-top");
-              aboutSection.style.position = "relative";
+  //             // Fix the services info in place
+  //             servicesInfo.style.position = "sticky";
+  //             servicesInfo.style.top = "0";
+  //           } else {
+  //             document.body.classList.remove("about-at-top");
+  //             aboutSection.style.position = "relative";
 
-              // Remove the spacer if it exists
-              const spacer = document.getElementById("about-spacer");
-              if (spacer) {
-                spacer.parentNode.removeChild(spacer);
-              }
+  //             // Remove the spacer if it exists
+  //             const spacer = document.getElementById("about-spacer");
+  //             if (spacer) {
+  //               spacer.parentNode.removeChild(spacer);
+  //             }
 
-              servicesInfo.style.position = "static";
-            }
-          });
-        },
-        { threshold: [0, 0.1], rootMargin: "-1px 0px 0px 0px" }
-      );
+  //             servicesInfo.style.position = "static";
+  //           }
+  //         });
+  //       },
+  //       { threshold: [0, 0.1], rootMargin: "-1px 0px 0px 0px" }
+  //     );
 
-      aboutObserver.observe(aboutSection);
+  //     aboutObserver.observe(aboutSection);
 
-      // Handle wheel events for the entire window
-      window.addEventListener(
-        "wheel",
-        (event) => {
-          if (!isDesktop) return;
+  //     // Handle wheel events for the entire window
+  //     window.addEventListener(
+  //       "wheel",
+  //       (event) => {
+  //         if (!isDesktop) return;
 
-          if (isAboutSectionAtTop) {
-            const teamInfoScrollTop = teamInfo.scrollTop;
-            const teamInfoScrollHeight = teamInfo.scrollHeight;
-            const teamInfoHeight = teamInfo.clientHeight;
-            const isTeamInfoAtBottom =
-              teamInfoScrollTop + teamInfoHeight >= teamInfoScrollHeight - 5;
-            const isTeamInfoAtTop = teamInfoScrollTop <= 0;
+  //         if (isAboutSectionAtTop) {
+  //           const teamInfoScrollTop = teamInfo.scrollTop;
+  //           const teamInfoScrollHeight = teamInfo.scrollHeight;
+  //           const teamInfoHeight = teamInfo.clientHeight;
+  //           const isTeamInfoAtBottom =
+  //             teamInfoScrollTop + teamInfoHeight >= teamInfoScrollHeight - 5;
+  //           const isTeamInfoAtTop = teamInfoScrollTop <= 0;
 
-            // If scrolling down and team-info is not at bottom, scroll team-info
-            if (event.deltaY > 0 && !isTeamInfoAtBottom) {
-              event.preventDefault();
-              teamInfo.scrollBy({
-                top: event.deltaY,
-                behavior: "auto",
-              });
-            }
-            // If scrolling up and team-info is not at top, scroll team-info
-            else if (event.deltaY < 0 && !isTeamInfoAtTop) {
-              event.preventDefault();
-              teamInfo.scrollBy({
-                top: event.deltaY,
-                behavior: "auto",
-              });
-            }
-            // If scrolling up and team-info is at top, unfix the about section and continue normal scrolling
-            else if (event.deltaY < 0 && isTeamInfoAtTop) {
-              aboutSection.style.position = "relative";
+  //           // If scrolling down and team-info is not at bottom, scroll team-info
+  //           if (event.deltaY > 0 && !isTeamInfoAtBottom) {
+  //             event.preventDefault();
+  //             teamInfo.scrollBy({
+  //               top: event.deltaY,
+  //               behavior: "auto",
+  //             });
+  //           }
+  //           // If scrolling up and team-info is not at top, scroll team-info
+  //           else if (event.deltaY < 0 && !isTeamInfoAtTop) {
+  //             event.preventDefault();
+  //             teamInfo.scrollBy({
+  //               top: event.deltaY,
+  //               behavior: "auto",
+  //             });
+  //           }
+  //           // If scrolling up and team-info is at top, unfix the about section and continue normal scrolling
+  //           else if (event.deltaY < 0 && isTeamInfoAtTop) {
+  //             aboutSection.style.position = "relative";
 
-              // Remove the spacer if it exists
-              const spacer = document.getElementById("about-spacer");
-              if (spacer) {
-                spacer.parentNode.removeChild(spacer);
-              }
+  //             // Remove the spacer if it exists
+  //             const spacer = document.getElementById("about-spacer");
+  //             if (spacer) {
+  //               spacer.parentNode.removeChild(spacer);
+  //             }
 
-              document.body.classList.remove("about-at-top");
-            }
-            // Otherwise, let the default page scrolling happen
-          }
-        },
-        { passive: false }
-      );
+  //             document.body.classList.remove("about-at-top");
+  //           }
+  //           // Otherwise, let the default page scrolling happen
+  //         }
+  //       },
+  //       { passive: false }
+  //     );
 
-      // Handle touch events for mobile
-      let touchStartY = 0;
+  //     // Handle touch events for mobile
+  //     let touchStartY = 0;
 
-      window.addEventListener(
-        "touchstart",
-        (event) => {
-          if (!isDesktop) return;
-          touchStartY = event.touches[0].clientY;
-        },
-        { passive: true }
-      );
+  //     window.addEventListener(
+  //       "touchstart",
+  //       (event) => {
+  //         if (!isDesktop) return;
+  //         touchStartY = event.touches[0].clientY;
+  //       },
+  //       { passive: true }
+  //     );
 
-      window.addEventListener(
-        "touchmove",
-        (event) => {
-          if (!isDesktop || !isAboutSectionAtTop) return;
+  //     window.addEventListener(
+  //       "touchmove",
+  //       (event) => {
+  //         if (!isDesktop || !isAboutSectionAtTop) return;
 
-          const touchY = event.touches[0].clientY;
-          const deltaY = touchStartY - touchY;
-          touchStartY = touchY;
+  //         const touchY = event.touches[0].clientY;
+  //         const deltaY = touchStartY - touchY;
+  //         touchStartY = touchY;
 
-          const teamInfoScrollTop = teamInfo.scrollTop;
-          const teamInfoScrollHeight = teamInfo.scrollHeight;
-          const teamInfoHeight = teamInfo.clientHeight;
-          const isTeamInfoAtBottom =
-            teamInfoScrollTop + teamInfoHeight >= teamInfoScrollHeight - 5;
-          const isTeamInfoAtTop = teamInfoScrollTop <= 0;
+  //         const teamInfoScrollTop = teamInfo.scrollTop;
+  //         const teamInfoScrollHeight = teamInfo.scrollHeight;
+  //         const teamInfoHeight = teamInfo.clientHeight;
+  //         const isTeamInfoAtBottom =
+  //           teamInfoScrollTop + teamInfoHeight >= teamInfoScrollHeight - 5;
+  //         const isTeamInfoAtTop = teamInfoScrollTop <= 0;
 
-          // If scrolling down and team-info is not at bottom, scroll team-info
-          if (deltaY > 0 && !isTeamInfoAtBottom) {
-            event.preventDefault();
-            teamInfo.scrollBy({
-              top: deltaY,
-              behavior: "auto",
-            });
-          }
-          // If scrolling up and team-info is not at top, scroll team-info
-          else if (deltaY < 0 && !isTeamInfoAtTop) {
-            event.preventDefault();
-            teamInfo.scrollBy({
-              top: deltaY,
-              behavior: "auto",
-            });
-          }
-          // If scrolling up and team-info is at top, unfix the about section
-          else if (deltaY < 0 && isTeamInfoAtTop) {
-            aboutSection.style.position = "relative";
+  //         // If scrolling down and team-info is not at bottom, scroll team-info
+  //         if (deltaY > 0 && !isTeamInfoAtBottom) {
+  //           event.preventDefault();
+  //           teamInfo.scrollBy({
+  //             top: deltaY,
+  //             behavior: "auto",
+  //           });
+  //         }
+  //         // If scrolling up and team-info is not at top, scroll team-info
+  //         else if (deltaY < 0 && !isTeamInfoAtTop) {
+  //           event.preventDefault();
+  //           teamInfo.scrollBy({
+  //             top: deltaY,
+  //             behavior: "auto",
+  //           });
+  //         }
+  //         // If scrolling up and team-info is at top, unfix the about section
+  //         else if (deltaY < 0 && isTeamInfoAtTop) {
+  //           aboutSection.style.position = "relative";
 
-            // Remove the spacer if it exists
-            const spacer = document.getElementById("about-spacer");
-            if (spacer) {
-              spacer.parentNode.removeChild(spacer);
-            }
+  //           // Remove the spacer if it exists
+  //           const spacer = document.getElementById("about-spacer");
+  //           if (spacer) {
+  //             spacer.parentNode.removeChild(spacer);
+  //           }
 
-            document.body.classList.remove("about-at-top");
-          }
-          // Otherwise, let the default page scrolling happen
-        },
-        { passive: false }
-      );
+  //           document.body.classList.remove("about-at-top");
+  //         }
+  //         // Otherwise, let the default page scrolling happen
+  //       },
+  //       { passive: false }
+  //     );
 
-      // Update scroll behavior on resize
-      window.addEventListener(
-        "resize",
-        debounce(() => {
-          const newIsDesktop = window.innerWidth >= 992;
+  //     // Update scroll behavior on resize
+  //     window.addEventListener(
+  //       "resize",
+  //       debounce(() => {
+  //         const newIsDesktop = window.innerWidth >= 992;
 
-          // If device type changed, reload the page to apply correct behavior
-          if (isDesktop !== newIsDesktop) {
-            location.reload();
-          }
-        }, 250)
-      );
-    }
-  }
+  //         // If device type changed, reload the page to apply correct behavior
+  //         if (isDesktop !== newIsDesktop) {
+  //           location.reload();
+  //         }
+  //       }, 250)
+  //     );
+  //   }
+  // }
 
-  // ===== Optimize Images =====
-  function optimizeImages() {
-    const projectImages = document.querySelectorAll(
-      ".project-img, .project-img-small"
-    );
+  // // ===== Optimize Images =====
+  // function optimizeImages() {
+  //   const projectImages = document.querySelectorAll(
+  //     ".project-img, .project-img-small"
+  //   );
 
-    projectImages.forEach((img) => {
-      if (!img.hasAttribute("loading")) {
-        img.setAttribute("loading", "lazy");
-      }
-    });
-  }
+  //   projectImages.forEach((img) => {
+  //     if (!img.hasAttribute("loading")) {
+  //       img.setAttribute("loading", "lazy");
+  //     }
+  //   });
+  // }
 
-  optimizeImages();
-  window.addEventListener("resize", debounce(optimizeImages, 200));
+  // optimizeImages();
+  // window.addEventListener("resize", debounce(optimizeImages, 200));
 
   // ===== Navbar Enhancement =====
   const navbar = document.querySelector(".navbar");
@@ -2182,4 +2182,27 @@ document.addEventListener("DOMContentLoaded", () => {
     navbar.style.left = "50%";
     navbar.style.zIndex = "1000";
   }
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const aboutSection = document.querySelector(".about-section");
+  const servicesInfo = document.querySelector(".services-info");
+  const teamInfo = document.querySelector(".team-info");
+
+  function handleScroll() {
+    const aboutSectionTop = aboutSection.getBoundingClientRect().top;
+
+    if (aboutSectionTop <= 0) {
+      servicesInfo.style.position = "fixed";
+      servicesInfo.style.top = "0";
+      servicesInfo.style.width = "auto";
+      teamInfo.style.width = "100%";
+    } else {
+      servicesInfo.style.position = "relative";
+      servicesInfo.style.top = "auto";
+      servicesInfo.style.width = "auto";
+      teamInfo.style.width = "453px";
+    }
+  }
+
+  window.addEventListener("scroll", handleScroll);
 });

@@ -216,9 +216,10 @@ img {
   justify-content: center;
   gap: 15px;
   padding: 0 15px;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
-  width: 100%;
+  width: 1420px;
+  margin: 0 auto;
   z-index: 10;
 }
 
@@ -234,7 +235,7 @@ img {
   flex-direction: column;
   gap: 15px;
   max-height: 100%;
-  width: 453px;
+  width: 453px; /* Set the width here */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
   scroll-behavior: smooth; /* Enable smooth scrolling */
 }
@@ -252,6 +253,7 @@ img {
 
 .card {
   margin-bottom: 15px;
+  max-width: 453px; /* Add this line to set the max-width of the card */
 }
 
 .card-inner {
@@ -298,10 +300,18 @@ img {
 }
 
 /* Right Section - Services Info */
+.services-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 .services-info {
+  position: sticky;
+  top: 0;
+  padding-top: 88.19px;
   display: flex;
   gap: 15px;
-  padding-top: 88.19px;
 }
 
 .service-card h4 {
@@ -330,21 +340,6 @@ img {
 .service-card li,
 .service-card p {
   opacity: 70%;
-}
-
-/* Remove scroll indicators as requested */
-.scroll-indicator,
-.team-scroll-indicator {
-  display: none !important;
-}
-
-/* Hardware acceleration for smoother animations */
-.navbar,
-.projects-slider,
-.project-card {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
 }
 
 /* Media Queries for Responsive Design */
