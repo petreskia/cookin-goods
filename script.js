@@ -1873,14 +1873,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const scrollAmount = isMobileOrTablet ? 100 : getScrollAmount();
         slider.scrollBy({
           left: -scrollAmount,
-          behavior: "smooth",
         });
         e.preventDefault();
       } else if (e.key === "ArrowRight") {
         const scrollAmount = isMobileOrTablet ? 100 : getScrollAmount();
         slider.scrollBy({
           left: scrollAmount,
-          behavior: "smooth",
         });
         e.preventDefault();
       }
