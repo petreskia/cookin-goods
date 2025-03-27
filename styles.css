@@ -218,7 +218,7 @@ img {
   padding: 0 15px;
   min-height: 100vh;
   position: relative;
-  width: 1420px;
+  width: 1419px;
   margin: 0 auto;
   z-index: 10;
 }
@@ -342,6 +342,68 @@ img {
   opacity: 70%;
 }
 
+/* Media query for screens below 1200px (laptops) */
+@media (max-width: 1200px) {
+  .about-section {
+    width: 100%;
+    padding: 0 20px;
+  }
+  .team-info {
+    width: 100%;
+    max-height: none;
+  }
+  .card {
+    margin: 20px auto;
+    max-width: 90%;
+  }
+  .services-info-container {
+    align-items: center;
+  }
+  .services-info {
+    position: relative;
+    padding-top: 0;
+  }
+}
+
+/* Media query for screens below 768px (tablets) */
+@media (max-width: 768px) {
+  .about-section {
+    flex-direction: column;
+  }
+  .team-info {
+    overflow-y: visible;
+  }
+  .card {
+    margin: 20px auto;
+    max-width: 90%;
+  }
+  .services-info-container {
+    align-items: center;
+  }
+  .services-info {
+    position: relative;
+    padding-top: 0;
+  }
+}
+
+/* Media query for screens below 480px (mobile devices) */
+@media (max-width: 480px) {
+  .about-section {
+    padding: 0 10px;
+  }
+  .card {
+    margin: 20px auto;
+    max-width: 90%;
+  }
+  .services-info-container {
+    align-items: center;
+  }
+  .services-info {
+    position: relative;
+    padding-top: 0;
+  }
+}
+
 /* Media Queries for Responsive Design */
 
 /* Large tablets and small desktops */
@@ -363,23 +425,6 @@ img {
     width: 400px;
     height: 302px;
   }
-
-  .about-section {
-    gap: 10px;
-  }
-
-  .fixed-card {
-    width: 380px;
-    height: 480px;
-  }
-
-  .team-info {
-    width: 380px;
-  }
-
-  .services-info {
-    flex-direction: column;
-  }
 }
 
 /* Tablets */
@@ -400,34 +445,6 @@ img {
 
   .project {
     margin-bottom: 120px;
-  }
-
-  .about-section {
-    flex-direction: column;
-    height: auto;
-    padding: 20px 15px;
-  }
-
-  .team-info {
-    width: 100%;
-    max-height: none;
-    overflow-y: visible;
-  }
-
-  .fixed-card {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1/1.25;
-  }
-
-  .services-info {
-    width: 100%;
-    padding-top: 20px;
-  }
-
-  .service-card .card-inner {
-    width: 100%;
-    height: auto;
   }
 }
 
@@ -483,38 +500,6 @@ img {
   .widget {
     font-size: 16px;
     padding: 7px 9px;
-  }
-
-  .about-section {
-    padding: 10px;
-  }
-
-  .about-section h2 {
-    font-size: 28px;
-    padding-bottom: 15px;
-  }
-
-  .services-info {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .card-content h3 {
-    font-size: 16px;
-  }
-
-  .card-content p {
-    font-size: 14px;
-    width: 100%;
-  }
-
-  .service-card .card-inner {
-    padding: 15px;
-    font-size: 18px;
-  }
-
-  .service-card ul {
-    gap: 15px;
   }
 }
 
@@ -597,35 +582,6 @@ img {
   .widget {
     font-size: 14px;
     padding: 6px 8px;
-  }
-}
-
-/* Small Mobile Phones */
-@media screen and (max-width: 480px) {
-  .about-section h2 {
-    font-size: 24px;
-    padding-bottom: 10px;
-  }
-
-  .fixed-card {
-    aspect-ratio: 1/1.5;
-  }
-
-  .card-content {
-    padding: 15px 0;
-  }
-
-  .service-card .card-inner {
-    padding: 12px;
-    font-size: 16px;
-  }
-
-  .service-card ul {
-    gap: 12px;
-  }
-
-  .service-card h4 {
-    margin-bottom: 15px;
   }
 }
 
