@@ -182,7 +182,7 @@ img {
 }
 
 .project-card {
-  scroll-snap-align: start; /* Snap to grid */
+  /* scroll-snap-align: start; Snap to grid */
   user-select: none; /* Prevent text selection during drag */
 }
 
