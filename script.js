@@ -704,10 +704,7 @@
 //   }
 // });
 document.addEventListener("DOMContentLoaded", () => {
-  // ===== Project Sliders Enhancement =====
-  const sliders = document.querySelectorAll(".projects-slider");
-
-  // Debounce function to improve performance for resize events
+  // ===== Performance Utilities =====
   function debounce(func, wait = 20, immediate = true) {
     let timeout;
     return function () {
@@ -724,16 +721,18 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // Calculate the optimal scroll amount based on screen size
+  // ===== Project Sliders Enhancement =====
+  const sliders = document.querySelectorAll(".projects-slider");
+
   function getScrollAmount() {
     if (window.innerWidth <= 576) {
-      return window.innerWidth * 0.85; // 85vw for mobile
+      return window.innerWidth * 0.85;
     } else if (window.innerWidth <= 768) {
-      return 350; // Medium screens
+      return 350;
     } else if (window.innerWidth <= 992) {
-      return 400; // Tablets
+      return 400;
     } else {
-      return 453; // Desktop default
+      return 453;
     }
   }
 
@@ -745,11 +744,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastTouchTime = 0;
     let lastClickTime = 0;
 
-    // Add ARIA attributes for accessibility
     slider.setAttribute("role", "region");
     slider.setAttribute("aria-label", "Project images carousel");
 
-    // Add visual indicator for scrollable content
     const scrollIndicator = document.createElement("div");
     scrollIndicator.className = "scroll-indicator";
     scrollIndicator.innerHTML = "<span>Scroll for more</span>";
@@ -765,11 +762,14 @@ document.addEventListener("DOMContentLoaded", () => {
       opacity: 0.8;
       transition: opacity 0.3s;
       pointer-events: none;
+      z-index: 10;
     `;
-    slider.parentNode.style.position = "relative";
-    slider.parentNode.appendChild(scrollIndicator);
 
-    // Hide indicator after scrolling
+    if (slider.parentNode) {
+      slider.parentNode.style.position = "relative";
+      slider.parentNode.appendChild(scrollIndicator);
+    }
+
     const hideScrollIndicator = () => {
       scrollIndicator.style.opacity = "0";
       setTimeout(() => {
@@ -781,7 +781,6 @@ document.addEventListener("DOMContentLoaded", () => {
       initialMargin = window.getComputedStyle(slider).marginLeft;
     }
 
-    // Touch event handlers with improved performance
     slider.addEventListener(
       "touchstart",
       (e) => {
@@ -791,14 +790,13 @@ document.addEventListener("DOMContentLoaded", () => {
         slider.style.scrollBehavior = "auto";
         lastTouchTime = Date.now();
       },
-      { passive: false }
-    );
+      { passive: true }
+    ); // Changed to passive for better performance
 
     slider.addEventListener("touchend", () => {
       isDragging = false;
       slider.style.scrollBehavior = "smooth";
 
-      // Snap to closest card after touch end
       const scrollAmount = getScrollAmount();
       const remainder = slider.scrollLeft % scrollAmount;
 
@@ -815,23 +813,25 @@ document.addEventListener("DOMContentLoaded", () => {
       "touchmove",
       (e) => {
         if (!isDragging) return;
+
         const x = e.touches[0].pageX - slider.offsetLeft;
-        const walk = (x - startX) * 1.5; // Increased sensitivity
-        slider.scrollLeft = scrollLeft - walk;
-        e.preventDefault(); // Prevent page scrolling while dragging
-        hideScrollIndicator();
+        const walk = (x - startX) * 1.5;
+
+        // Only prevent default if significant horizontal movement
+        if (Math.abs(walk) > 10) {
+          e.preventDefault();
+          slider.scrollLeft = scrollLeft - walk;
+          hideScrollIndicator();
+        }
       },
       { passive: false }
     );
 
-    // Improved click navigation
     slider.addEventListener("click", (e) => {
-      // Prevent accidental clicks during drag
       if (isDragging || Date.now() - lastTouchTime < 300) {
         return;
       }
 
-      // Prevent double clicks
       if (Date.now() - lastClickTime < 300) {
         return;
       }
@@ -842,13 +842,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const scrollAmount = getScrollAmount();
 
       if (clickX < sliderCenterX) {
-        // Scroll left with boundary check
         slider.scrollBy({
           left: -scrollAmount,
           behavior: "smooth",
         });
       } else {
-        // Scroll right with boundary check
         slider.scrollBy({
           left: scrollAmount,
           behavior: "smooth",
@@ -856,7 +854,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Mouse event handlers
     slider.addEventListener("mousedown", (e) => {
       isDragging = true;
       startX = e.pageX - slider.offsetLeft;
@@ -879,7 +876,6 @@ document.addEventListener("DOMContentLoaded", () => {
       slider.style.scrollBehavior = "smooth";
       slider.style.cursor = "grab";
 
-      // Snap to closest card after mouse up
       const scrollAmount = getScrollAmount();
       const remainder = slider.scrollLeft % scrollAmount;
 
@@ -894,12 +890,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!isDragging) return;
       e.preventDefault();
       const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 1.5; // Increased sensitivity
+      const walk = (x - startX) * 1.5;
       slider.scrollLeft = scrollLeft - walk;
       hideScrollIndicator();
     });
 
-    // Add keyboard navigation for accessibility
     slider.tabIndex = 0;
     slider.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft") {
@@ -917,9 +912,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Enhanced margin update function
     function updateMargins() {
-      // Calculate appropriate margin based on screen size
       let sliderMargin;
 
       if (window.innerWidth >= 1440) {
@@ -929,10 +922,9 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (window.innerWidth >= 768) {
         sliderMargin = 10;
       } else {
-        sliderMargin = 15; // Mobile default
+        sliderMargin = 15;
       }
 
-      // Apply margins
       slider.style.marginLeft = `${sliderMargin}px`;
 
       const project = slider.closest(".project");
@@ -949,7 +941,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Update scroll indicator position
       if (window.innerWidth <= 576) {
         scrollIndicator.style.right = "10px";
         scrollIndicator.style.bottom = "10px";
@@ -959,19 +950,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Initialize margins
     updateMargins();
 
-    // Add scroll snap points for better UX
     const cards = slider.querySelectorAll(".project-card");
     cards.forEach((card) => {
       card.style.scrollSnapAlign = "start";
     });
 
-    // Optimize resize event with debounce
     window.addEventListener("resize", debounce(updateMargins, 100));
 
-    // Show scroll indicator when slider is in view
     const sliderObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -979,8 +966,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (slider.scrollWidth > slider.clientWidth) {
               scrollIndicator.style.display = "block";
               scrollIndicator.style.opacity = "0.8";
-
-              // Auto-hide after 3 seconds
               setTimeout(hideScrollIndicator, 3000);
             }
           }
@@ -1000,143 +985,17 @@ document.addEventListener("DOMContentLoaded", () => {
   if (teamInfo && servicesInfo && aboutSection) {
     let isFooterAtTop = false;
     let touchStartY = 0;
-    let lastScrollTop = 0;
-    let scrollTimeout;
 
-    // Improved intersection observer with options
-    const observerOptions = {
-      threshold: [0, 0.1, 0.5],
-      rootMargin: "-10px 0px 0px 0px",
-    };
+    // Fix for mobile scrolling issues at the bottom of the page
+    const isMobile = window.innerWidth <= 768;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        isFooterAtTop = entry.isIntersecting && entry.intersectionRatio > 0.1;
+    // Use different approach for mobile vs desktop
+    if (isMobile) {
+      // On mobile, use simpler approach with native scrolling
+      teamInfo.style.overflow = "auto";
+      teamInfo.style.webkitOverflowScrolling = "touch";
 
-        // Add class for styling when section is in view
-        if (entry.isIntersecting) {
-          aboutSection.classList.add("in-view");
-        } else {
-          aboutSection.classList.remove("in-view");
-        }
-      });
-    }, observerOptions);
-
-    observer.observe(aboutSection);
-
-    // Enhanced scroll handling with momentum scrolling
-    const handleScroll = (event, isTouch = false) => {
-      if (!isFooterAtTop) {
-        return; // Let default scrolling happen
-      }
-
-      event.preventDefault();
-
-      const maxScrollTop = teamInfo.scrollHeight - teamInfo.clientHeight;
-      let scrollAmount;
-
-      if (isTouch) {
-        const touchY = event.touches[0].clientY;
-        scrollAmount = touchStartY - touchY;
-        touchStartY = touchY;
-      } else {
-        scrollAmount = event.deltaY;
-      }
-
-      // Apply easing for smoother scrolling
-      scrollAmount = scrollAmount * 0.8;
-
-      // Handle boundary conditions with momentum
-      if (teamInfo.scrollTop >= maxScrollTop && scrollAmount > 0) {
-        // At bottom of team-info, continue website scrolling
-        window.scrollBy({
-          top: scrollAmount,
-          behavior: "auto",
-        });
-      } else if (teamInfo.scrollTop <= 0 && scrollAmount < 0) {
-        // At top of team-info, continue website scrolling up
-        window.scrollBy({
-          top: scrollAmount,
-          behavior: "auto",
-        });
-      } else {
-        // Scroll team-info with momentum
-        teamInfo.scrollTop += scrollAmount;
-
-        // Clear previous timeout
-        clearTimeout(scrollTimeout);
-
-        // Add momentum effect
-        scrollTimeout = setTimeout(() => {
-          const currentScrollTop = teamInfo.scrollTop;
-          const delta = currentScrollTop - lastScrollTop;
-
-          if (Math.abs(delta) > 10) {
-            const momentum = delta * 0.2;
-
-            // Animate with momentum
-            let start = null;
-            const animate = (timestamp) => {
-              if (!start) start = timestamp;
-              const progress = timestamp - start;
-
-              if (progress < 300) {
-                teamInfo.scrollTop += momentum * (1 - progress / 300);
-                requestAnimationFrame(animate);
-              }
-            };
-
-            requestAnimationFrame(animate);
-          }
-        }, 50);
-
-        lastScrollTop = teamInfo.scrollTop;
-      }
-    };
-
-    // Touch event handlers for team-info section
-    teamInfo.addEventListener(
-      "touchstart",
-      (event) => {
-        touchStartY = event.touches[0].clientY;
-      },
-      { passive: true }
-    );
-
-    // Improved wheel event handling
-    servicesInfo.addEventListener(
-      "wheel",
-      (event) => {
-        if (isFooterAtTop) {
-          handleScroll(event);
-        }
-      },
-      { passive: false }
-    );
-
-    // Improved touch event handling
-    servicesInfo.addEventListener(
-      "touchmove",
-      (event) => {
-        if (isFooterAtTop) {
-          handleScroll(event, true);
-        }
-      },
-      { passive: false }
-    );
-
-    // Add keyboard navigation for accessibility
-    aboutSection.tabIndex = 0;
-    aboutSection.addEventListener("keydown", (e) => {
-      if (isFooterAtTop && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
-        const scrollAmount = e.key === "ArrowUp" ? -50 : 50;
-        teamInfo.scrollTop += scrollAmount;
-        e.preventDefault();
-      }
-    });
-
-    // Add scroll indicator for team-info section
-    if (teamInfo.scrollHeight > teamInfo.clientHeight) {
+      // Add scroll indicator
       const scrollIndicator = document.createElement("div");
       scrollIndicator.className = "team-scroll-indicator";
       scrollIndicator.innerHTML = "<span>Scroll for more</span>";
@@ -1153,6 +1012,7 @@ document.addEventListener("DOMContentLoaded", () => {
         opacity: 0.8;
         transition: opacity 0.3s;
         pointer-events: none;
+        z-index: 10;
       `;
 
       teamInfo.style.position = "relative";
@@ -1168,30 +1028,149 @@ document.addEventListener("DOMContentLoaded", () => {
           }, 300);
         }, 200)
       );
+    } else {
+      // Desktop version with custom scroll handling
+      const observerOptions = {
+        threshold: [0, 0.1, 0.5],
+        rootMargin: "-10px 0px 0px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          isFooterAtTop = entry.isIntersecting && entry.intersectionRatio > 0.1;
+
+          if (entry.isIntersecting) {
+            aboutSection.classList.add("in-view");
+          } else {
+            aboutSection.classList.remove("in-view");
+          }
+        });
+      }, observerOptions);
+
+      observer.observe(aboutSection);
+
+      const handleScroll = (event, isTouch = false) => {
+        if (!isFooterAtTop) {
+          return; // Let default scrolling happen
+        }
+
+        event.preventDefault();
+
+        const maxScrollTop = teamInfo.scrollHeight - teamInfo.clientHeight;
+        let scrollAmount;
+
+        if (isTouch) {
+          const touchY = event.touches[0].clientY;
+          scrollAmount = touchStartY - touchY;
+          touchStartY = touchY;
+        } else {
+          scrollAmount = event.deltaY;
+        }
+
+        scrollAmount = scrollAmount * 0.8;
+
+        if (teamInfo.scrollTop >= maxScrollTop && scrollAmount > 0) {
+          window.scrollBy({
+            top: scrollAmount,
+            behavior: "auto",
+          });
+        } else if (teamInfo.scrollTop <= 0 && scrollAmount < 0) {
+          window.scrollBy({
+            top: scrollAmount,
+            behavior: "auto",
+          });
+        } else {
+          teamInfo.scrollTop += scrollAmount;
+        }
+      };
+
+      teamInfo.addEventListener(
+        "touchstart",
+        (event) => {
+          touchStartY = event.touches[0].clientY;
+        },
+        { passive: true }
+      );
+
+      servicesInfo.addEventListener(
+        "wheel",
+        (event) => {
+          if (isFooterAtTop) {
+            handleScroll(event);
+          }
+        },
+        { passive: false }
+      );
+
+      servicesInfo.addEventListener(
+        "touchmove",
+        (event) => {
+          if (isFooterAtTop) {
+            handleScroll(event, true);
+          }
+        },
+        { passive: false }
+      );
+
+      aboutSection.tabIndex = 0;
+      aboutSection.addEventListener("keydown", (e) => {
+        if (isFooterAtTop && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+          const scrollAmount = e.key === "ArrowUp" ? -50 : 50;
+          teamInfo.scrollTop += scrollAmount;
+          e.preventDefault();
+        }
+      });
+
+      // Add scroll indicator for team-info section
+      if (teamInfo.scrollHeight > teamInfo.clientHeight) {
+        const scrollIndicator = document.createElement("div");
+        scrollIndicator.className = "team-scroll-indicator";
+        scrollIndicator.innerHTML = "<span>Scroll for more</span>";
+        scrollIndicator.style.cssText = `
+          position: absolute;
+          bottom: 15px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(0,0,0,0.7);
+          color: white;
+          padding: 5px 10px;
+          border-radius: 4px;
+          font-size: 12px;
+          opacity: 0.8;
+          transition: opacity 0.3s;
+          pointer-events: none;
+          z-index: 10;
+        `;
+
+        teamInfo.style.position = "relative";
+        teamInfo.appendChild(scrollIndicator);
+
+        teamInfo.addEventListener(
+          "scroll",
+          debounce(() => {
+            scrollIndicator.style.opacity = "0";
+            setTimeout(() => {
+              scrollIndicator.style.display = "none";
+            }, 300);
+          }, 200)
+        );
+      }
     }
   }
 
   // ===== Optimize Images =====
-  // Simple image optimization without trying to load non-existent mobile versions
   function optimizeImages() {
     const projectImages = document.querySelectorAll(
       ".project-img, .project-img-small"
     );
 
     projectImages.forEach((img) => {
-      // Add loading="lazy" attribute if not already present
       if (!img.hasAttribute("loading")) {
         img.setAttribute("loading", "lazy");
-      }
-
-      // Ensure proper sizing on mobile
-      if (window.innerWidth <= 576) {
-        img.style.width = "100%";
       }
     });
   }
 
-  // Run image optimization
   optimizeImages();
   window.addEventListener("resize", debounce(optimizeImages, 200));
 
@@ -1199,18 +1178,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const navbar = document.querySelector(".navbar");
 
   if (navbar) {
+    // FIX 1: Ensure navbar is initially centered
+    navbar.style.transform = "translateX(-50%)";
+
     let lastScrollY = window.scrollY;
     let ticking = false;
 
-    // Hide navbar on scroll down, show on scroll up
     function updateNavbar() {
       const currentScrollY = window.scrollY;
 
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scrolling down - hide navbar
         navbar.style.transform = "translateY(-100%)";
       } else {
-        // Scrolling up - show navbar
         navbar.style.transform = "translateX(-50%)";
       }
 
@@ -1225,7 +1204,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Add transition for smooth hiding/showing
     navbar.style.transition = "transform 0.3s ease";
   }
 });
