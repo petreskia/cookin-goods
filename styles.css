@@ -582,7 +582,6 @@ img {
   }
 
   .project-card {
-    width: 277px; /* Match the width of project-img */
     flex: 0 0 auto;
   }
 
