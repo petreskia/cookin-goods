@@ -1,5 +1,4 @@
 /* CSS Resets */
-
 * {
   box-sizing: border-box;
 }
@@ -11,6 +10,12 @@ body {
   background-color: #191818;
   font-weight: 200;
   line-height: 1.2;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+html {
+  scroll-behavior: smooth; /* Enable smooth scrolling */
 }
 
 h1,
@@ -22,6 +27,7 @@ ul {
   margin: 0;
   font-weight: 200;
 }
+
 /* Remove default list styles */
 ul {
   list-style: none;
@@ -37,6 +43,7 @@ a {
 img {
   display: block;
   width: 100%;
+  object-fit: cover; /* Ensure images maintain aspect ratio */
 }
 
 /* NavBar */
@@ -55,6 +62,8 @@ img {
   transform: translateX(-50%);
   backdrop-filter: blur(30px); /* Background blur */
   z-index: 1000;
+  transition: transform 0.3s ease; /* Smooth transition for navbar hiding/showing */
+  will-change: transform; /* Optimize for animations */
 }
 
 .logo img {
@@ -80,6 +89,9 @@ img {
   justify-content: center;
   font-size: 56px;
   text-align: center;
+  position: relative; /* Ensure proper stacking */
+  z-index: 1;
+  overflow: hidden; /* Prevent unwanted scrolling */
 }
 
 .banner-content {
@@ -94,6 +106,11 @@ img {
 }
 
 /* Projects */
+.projects-container {
+  position: relative;
+  z-index: 2;
+}
+
 .project {
   padding-left: 15px;
   margin-bottom: 150px;
@@ -110,6 +127,13 @@ img {
   touch-action: pan-x;
   user-select: none;
   margin-left: 0; /* Reset margin on smaller screens */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  cursor: grab; /* Indicate draggable */
+  will-change: transform; /* Optimize for animations */
+}
+
+.projects-slider:active {
+  cursor: grabbing; /* Change cursor when actively dragging */
 }
 
 .projects-slider::-webkit-scrollbar {
@@ -130,10 +154,12 @@ img {
   margin-left: var(--info-margin, 0);
 }
 
+/* Fix for project images - maintain consistent height */
 .project-img,
 .project-img-small {
-  height: 302px;
+  height: 302px !important; /* Force consistent height */
   border-radius: 5px;
+  object-fit: cover; /* Maintain aspect ratio */
 }
 
 .project-img {
@@ -149,6 +175,11 @@ img {
   height: 302px;
   border-radius: 5px;
   pointer-events: none;
+}
+
+.project-card {
+  scroll-snap-align: start; /* Snap to grid */
+  user-select: none; /* Prevent text selection during drag */
 }
 
 .widgets-container {
@@ -178,6 +209,154 @@ img {
   position: relative;
 }
 
+/* About Section */
+.about-section {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  padding: 0 15px;
+  height: 100vh;
+  position: relative;
+  width: 100%;
+  z-index: 10;
+}
+
+.about-section h2 {
+  font-size: 36px;
+  padding-bottom: 30px;
+}
+
+/* Left Section - Team Info */
+.team-info {
+  overflow-y: scroll; /* Ensure scrolling is enabled */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 100%;
+  width: 453px;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  scroll-behavior: smooth; /* Enable smooth scrolling */
+}
+
+/* Hide scrollbar */
+.team-info::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in Webkit-based browsers */
+}
+
+/* Optional: style the scrollbar thumb when visible */
+.team-info::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 5px;
+}
+
+.card {
+  margin-bottom: 15px;
+}
+
+.card-inner {
+  border-radius: 5px;
+}
+
+.team-card {
+  background-color: #191818;
+  border-radius: 5px;
+}
+
+.card-content {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-content h3 {
+  font-size: 18px;
+}
+
+.card-content p {
+  font-size: 16px;
+  line-height: 1.3;
+  width: 90%;
+}
+
+.card-content a {
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.fixed-card {
+  height: 566px;
+  width: 453px;
+}
+
+.fixed-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+/* Right Section - Services Info */
+.services-info {
+  display: flex;
+  gap: 15px;
+  padding-top: 88.19px;
+}
+
+.service-card h4 {
+  margin-bottom: 20px;
+}
+
+.service-card .card-inner {
+  padding: 25px;
+  background-color: #2a2a2a;
+  border-radius: 5px;
+  font-size: 22px;
+}
+
+.service-card ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.service-card li {
+  width: max-content;
+  cursor: pointer;
+}
+
+.service-card li,
+.service-card p {
+  opacity: 70%;
+}
+
+/* Scroll indicators */
+.scroll-indicator,
+.team-scroll-indicator {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Hardware acceleration for smoother animations */
+.navbar,
+.projects-slider,
+.project-card,
+.scroll-indicator,
+.team-scroll-indicator {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
 /* Media Queries for Responsive Design */
 
 /* Large tablets and small desktops */
@@ -189,17 +368,32 @@ img {
 
   .project-img {
     width: 400px;
-    height: 267px;
   }
 
   .project-img-small {
     width: 200px;
-    height: 267px;
   }
 
   .project-video {
     width: 400px;
-    height: 267px;
+    height: 302px;
+  }
+
+  .about-section {
+    gap: 10px;
+  }
+
+  .fixed-card {
+    width: 380px;
+    height: 480px;
+  }
+
+  .team-info {
+    width: 380px;
+  }
+
+  .services-info {
+    flex-direction: column;
   }
 }
 
@@ -222,6 +416,34 @@ img {
   .project {
     padding-left: 10px;
     margin-bottom: 120px;
+  }
+
+  .about-section {
+    flex-direction: column;
+    height: auto;
+    padding: 20px 15px;
+  }
+
+  .team-info {
+    width: 100%;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .fixed-card {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1.25;
+  }
+
+  .services-info {
+    width: 100%;
+    padding-top: 20px;
+  }
+
+  .service-card .card-inner {
+    width: 100%;
+    height: auto;
   }
 }
 
@@ -266,17 +488,47 @@ img {
   .project-img,
   .project-video {
     width: 350px;
-    height: 233px;
   }
 
   .project-img-small {
     width: 175px;
-    height: 233px;
   }
 
   .widget {
     font-size: 16px;
     padding: 7px 9px;
+  }
+
+  .about-section {
+    padding: 10px;
+  }
+
+  .about-section h2 {
+    font-size: 28px;
+    padding-bottom: 15px;
+  }
+
+  .services-info {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .card-content h3 {
+    font-size: 16px;
+  }
+
+  .card-content p {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .service-card .card-inner {
+    padding: 15px;
+    font-size: 18px;
+  }
+
+  .service-card ul {
+    gap: 15px;
   }
 }
 
@@ -332,21 +584,15 @@ img {
 
   .project-card {
     scroll-snap-align: start;
-    width: 100%;
+    width: 85vw; /* Use percentage of viewport width */
     flex: 0 0 auto;
   }
 
   .project-img,
+  .project-img-small,
   .project-video {
     width: 100%;
-    height: 185px;
-    aspect-ratio: 3/2;
-  }
-
-  .project-img-small {
-    width: 100%;
-    height: 185px;
-    aspect-ratio: 1/1.4;
+    height: 302px !important; /* Maintain consistent height */
   }
 
   .widgets-container {
@@ -361,6 +607,35 @@ img {
 }
 
 /* Small Mobile Phones */
+@media screen and (max-width: 480px) {
+  .about-section h2 {
+    font-size: 24px;
+    padding-bottom: 10px;
+  }
+
+  .fixed-card {
+    aspect-ratio: 1/1.5;
+  }
+
+  .card-content {
+    padding: 15px 0;
+  }
+
+  .service-card .card-inner {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .service-card ul {
+    gap: 12px;
+  }
+
+  .service-card h4 {
+    margin-bottom: 15px;
+  }
+}
+
+/* Extra Small Mobile Phones */
 @media screen and (max-width: 375px) {
   .navbar {
     padding: 6px 8px;
@@ -391,225 +666,5 @@ img {
   .widget {
     font-size: 12px;
     padding: 5px 7px;
-  }
-}
-/* About Section */
-.about-section {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  padding: 0 15px;
-  height: 100vh;
-  position: relative;
-  width: 100%;
-  z-index: 10;
-}
-.about-section h2 {
-  font-size: 36px;
-  padding-bottom: 30px;
-}
-/* Left Section - Team Info */
-.team-info {
-  overflow-y: scroll; /* Ensure scrolling is enabled */
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  max-height: 100%;
-  width: 453px;
-}
-
-/* Hide scrollbar */
-.team-info::-webkit-scrollbar {
-  display: none; /* Hide scrollbar in Webkit-based browsers */
-}
-
-/* Optional: style the scrollbar thumb when visible */
-.team-info::-webkit-scrollbar-thumb {
-  background-color: #555;
-  border-radius: 5px;
-}
-
-.card {
-  margin-bottom: 15px;
-}
-
-.card-inner {
-  border-radius: 5px;
-}
-
-.team-card {
-  background-color: #191818;
-  border-radius: 5px;
-}
-
-.card-content {
-  padding: 20px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.card-content h3 {
-  font-size: 18px;
-}
-.card-content p {
-  font-size: 16px;
-  line-height: 1.3;
-  width: 90%;
-}
-.card-content a {
-  text-decoration: underline;
-  font-size: 14px;
-}
-.fixed-card {
-  height: 566px;
-  width: 453px;
-}
-
-/* Right Section - Services Info */
-.services-info {
-  display: flex;
-  gap: 15px;
-  padding-top: 88.19px;
-}
-
-.service-card h4 {
-  margin-bottom: 20px;
-}
-.service-card .card-inner {
-  padding: 25px;
-  background-color: #2a2a2a;
-  border-radius: 5px;
-  font-size: 22px;
-}
-
-.service-card ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-.service-card li {
-  width: max-content;
-  cursor: pointer;
-}
-.service-card li,
-.service-card p {
-  opacity: 70%;
-}
-
-/* Media Queries for Responsive Design */
-
-/* Large tablets and small desktops */
-@media screen and (max-width: 1200px) {
-  .about-section {
-    gap: 10px;
-  }
-
-  .fixed-card {
-    width: 380px;
-    height: 480px;
-  }
-
-  .team-info {
-    width: 380px;
-  }
-
-  .services-info {
-    flex-direction: column;
-  }
-}
-
-/* Tablets */
-@media screen and (max-width: 992px) {
-  .about-section {
-    flex-direction: column;
-    height: auto;
-    padding: 20px 15px;
-  }
-
-  .team-info {
-    width: 100%;
-    max-height: none;
-    overflow-y: visible;
-  }
-
-  .fixed-card {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1/1.25;
-  }
-
-  .services-info {
-    width: 100%;
-    padding-top: 20px;
-  }
-
-  .service-card .card-inner {
-    width: 100%;
-    height: auto;
-  }
-}
-
-/* Mobile Phones */
-@media screen and (max-width: 768px) {
-  .about-section {
-    padding: 10px;
-  }
-
-  .about-section h2 {
-    font-size: 28px;
-    padding-bottom: 15px;
-  }
-
-  .services-info {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .card-content h3 {
-    font-size: 16px;
-  }
-
-  .card-content p {
-    font-size: 14px;
-    width: 100%;
-  }
-
-  .service-card .card-inner {
-    padding: 15px;
-    font-size: 18px;
-  }
-
-  .service-card ul {
-    gap: 15px;
-  }
-}
-
-/* Small Mobile Phones */
-@media screen and (max-width: 480px) {
-  .about-section h2 {
-    font-size: 24px;
-    padding-bottom: 10px;
-  }
-
-  .fixed-card {
-    aspect-ratio: 1/1.5;
-  }
-
-  .card-content {
-    padding: 15px 0;
-  }
-
-  .service-card .card-inner {
-    padding: 12px;
-    font-size: 16px;
-  }
-
-  .service-card ul {
-    gap: 12px;
-  }
-
-  .service-card h4 {
-    margin-bottom: 15px;
   }
 }
