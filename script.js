@@ -703,6 +703,512 @@
 //     navbar.style.transition = "transform 0.3s ease";
 //   }
 // });
+
+// Last version
+// document.addEventListener("DOMContentLoaded", () => {
+//   // ===== Performance Utilities =====
+//   function debounce(func, wait = 20, immediate = true) {
+//     let timeout;
+//     return function () {
+//       const context = this,
+//         args = arguments;
+//       const later = function () {
+//         timeout = null;
+//         if (!immediate) func.apply(context, args);
+//       };
+//       const callNow = immediate && !timeout;
+//       clearTimeout(timeout);
+//       timeout = setTimeout(later, wait);
+//       if (callNow) func.apply(context, args);
+//     };
+//   }
+
+//   // ===== Project Sliders Enhancement =====
+//   const sliders = document.querySelectorAll(".projects-slider");
+
+//   function getScrollAmount() {
+//     if (window.innerWidth <= 576) {
+//       return window.innerWidth * 0.85;
+//     } else if (window.innerWidth <= 768) {
+//       return 350;
+//     } else if (window.innerWidth <= 992) {
+//       return 400;
+//     } else {
+//       return 453;
+//     }
+//   }
+
+//   sliders.forEach((slider) => {
+//     let isDragging = false;
+//     let startX = 0;
+//     let scrollLeft = 0;
+//     let initialMargin = "";
+//     let lastTouchTime = 0;
+//     let lastClickTime = 0;
+
+//     slider.setAttribute("role", "region");
+//     slider.setAttribute("aria-label", "Project images carousel");
+
+//     const scrollIndicator = document.createElement("div");
+//     scrollIndicator.className = "scroll-indicator";
+//     scrollIndicator.innerHTML = "<span>Scroll for more</span>";
+//     scrollIndicator.style.cssText = `
+//       position: absolute;
+//       right: 15px;
+//       bottom: 15px;
+//       background: rgba(0,0,0,0.7);
+//       color: white;
+//       padding: 5px 10px;
+//       border-radius: 4px;
+//       font-size: 12px;
+//       opacity: 0.8;
+//       transition: opacity 0.3s;
+//       pointer-events: none;
+//       z-index: 10;
+//     `;
+
+//     if (slider.parentNode) {
+//       slider.parentNode.style.position = "relative";
+//       slider.parentNode.appendChild(scrollIndicator);
+//     }
+
+//     const hideScrollIndicator = () => {
+//       scrollIndicator.style.opacity = "0";
+//       setTimeout(() => {
+//         scrollIndicator.style.display = "none";
+//       }, 300);
+//     };
+
+//     if (window.innerWidth >= 1440) {
+//       initialMargin = window.getComputedStyle(slider).marginLeft;
+//     }
+
+//     slider.addEventListener(
+//       "touchstart",
+//       (e) => {
+//         isDragging = true;
+//         startX = e.touches[0].pageX - slider.offsetLeft;
+//         scrollLeft = slider.scrollLeft;
+//         slider.style.scrollBehavior = "auto";
+//         lastTouchTime = Date.now();
+//       },
+//       { passive: true }
+//     ); // Changed to passive for better performance
+
+//     slider.addEventListener("touchend", () => {
+//       isDragging = false;
+//       slider.style.scrollBehavior = "smooth";
+
+//       const scrollAmount = getScrollAmount();
+//       const remainder = slider.scrollLeft % scrollAmount;
+
+//       if (remainder > scrollAmount / 2) {
+//         slider.scrollLeft += scrollAmount - remainder;
+//       } else {
+//         slider.scrollLeft -= remainder;
+//       }
+
+//       hideScrollIndicator();
+//     });
+
+//     slider.addEventListener(
+//       "touchmove",
+//       (e) => {
+//         if (!isDragging) return;
+
+//         const x = e.touches[0].pageX - slider.offsetLeft;
+//         const walk = (x - startX) * 1.5;
+
+//         // Only prevent default if significant horizontal movement
+//         if (Math.abs(walk) > 10) {
+//           e.preventDefault();
+//           slider.scrollLeft = scrollLeft - walk;
+//           hideScrollIndicator();
+//         }
+//       },
+//       { passive: false }
+//     );
+
+//     slider.addEventListener("click", (e) => {
+//       if (isDragging || Date.now() - lastTouchTime < 300) {
+//         return;
+//       }
+
+//       if (Date.now() - lastClickTime < 300) {
+//         return;
+//       }
+//       lastClickTime = Date.now();
+
+//       const clickX = e.clientX - slider.getBoundingClientRect().left;
+//       const sliderCenterX = slider.offsetWidth / 2;
+//       const scrollAmount = getScrollAmount();
+
+//       if (clickX < sliderCenterX) {
+//         slider.scrollBy({
+//           left: -scrollAmount,
+//           behavior: "smooth",
+//         });
+//       } else {
+//         slider.scrollBy({
+//           left: scrollAmount,
+//           behavior: "smooth",
+//         });
+//       }
+//     });
+
+//     slider.addEventListener("mousedown", (e) => {
+//       isDragging = true;
+//       startX = e.pageX - slider.offsetLeft;
+//       scrollLeft = slider.scrollLeft;
+//       slider.style.scrollBehavior = "auto";
+//       slider.style.cursor = "grabbing";
+//       e.preventDefault();
+//     });
+
+//     slider.addEventListener("mouseleave", () => {
+//       if (isDragging) {
+//         isDragging = false;
+//         slider.style.scrollBehavior = "smooth";
+//         slider.style.cursor = "grab";
+//       }
+//     });
+
+//     slider.addEventListener("mouseup", () => {
+//       isDragging = false;
+//       slider.style.scrollBehavior = "smooth";
+//       slider.style.cursor = "grab";
+
+//       const scrollAmount = getScrollAmount();
+//       const remainder = slider.scrollLeft % scrollAmount;
+
+//       if (remainder > scrollAmount / 2) {
+//         slider.scrollLeft += scrollAmount - remainder;
+//       } else {
+//         slider.scrollLeft -= remainder;
+//       }
+//     });
+
+//     slider.addEventListener("mousemove", (e) => {
+//       if (!isDragging) return;
+//       e.preventDefault();
+//       const x = e.pageX - slider.offsetLeft;
+//       const walk = (x - startX) * 1.5;
+//       slider.scrollLeft = scrollLeft - walk;
+//       hideScrollIndicator();
+//     });
+
+//     slider.tabIndex = 0;
+//     slider.addEventListener("keydown", (e) => {
+//       if (e.key === "ArrowLeft") {
+//         slider.scrollBy({
+//           left: -getScrollAmount(),
+//           behavior: "smooth",
+//         });
+//         e.preventDefault();
+//       } else if (e.key === "ArrowRight") {
+//         slider.scrollBy({
+//           left: getScrollAmount(),
+//           behavior: "smooth",
+//         });
+//         e.preventDefault();
+//       }
+//     });
+
+//     function updateMargins() {
+//       let sliderMargin;
+
+//       if (window.innerWidth >= 1440) {
+//         sliderMargin = (window.innerWidth - 1440) / 2;
+//       } else if (window.innerWidth >= 992) {
+//         sliderMargin = 15;
+//       } else if (window.innerWidth >= 768) {
+//         sliderMargin = 10;
+//       } else {
+//         sliderMargin = 15;
+//       }
+
+//       slider.style.marginLeft = `${sliderMargin}px`;
+
+//       const project = slider.closest(".project");
+//       if (project) {
+//         const info = project.querySelector(".project-info");
+//         const widgets = project.querySelector(".widgets-container");
+
+//         if (info) {
+//           info.style.setProperty("--info-margin", `${sliderMargin}px`);
+//         }
+
+//         if (widgets) {
+//           widgets.style.setProperty("--widgets-margin", `${sliderMargin}px`);
+//         }
+//       }
+
+//       if (window.innerWidth <= 576) {
+//         scrollIndicator.style.right = "10px";
+//         scrollIndicator.style.bottom = "10px";
+//       } else {
+//         scrollIndicator.style.right = "15px";
+//         scrollIndicator.style.bottom = "15px";
+//       }
+//     }
+
+//     updateMargins();
+
+//     const cards = slider.querySelectorAll(".project-card");
+//     cards.forEach((card) => {
+//       card.style.scrollSnapAlign = "start";
+//     });
+
+//     window.addEventListener("resize", debounce(updateMargins, 100));
+
+//     const sliderObserver = new IntersectionObserver(
+//       (entries) => {
+//         entries.forEach((entry) => {
+//           if (entry.isIntersecting) {
+//             if (slider.scrollWidth > slider.clientWidth) {
+//               scrollIndicator.style.display = "block";
+//               scrollIndicator.style.opacity = "0.8";
+//               setTimeout(hideScrollIndicator, 3000);
+//             }
+//           }
+//         });
+//       },
+//       { threshold: 0.1 }
+//     );
+
+//     sliderObserver.observe(slider);
+//   });
+
+//   // ===== About Section Scroll Enhancement =====
+//   const teamInfo = document.querySelector(".team-info");
+//   const servicesInfo = document.querySelector(".services-info");
+//   const aboutSection = document.querySelector(".about-section");
+
+//   if (teamInfo && servicesInfo && aboutSection) {
+//     let isFooterAtTop = false;
+//     let touchStartY = 0;
+
+//     // Fix for mobile scrolling issues at the bottom of the page
+//     const isMobile = window.innerWidth <= 768;
+
+//     // Use different approach for mobile vs desktop
+//     if (isMobile) {
+//       // On mobile, use simpler approach with native scrolling
+//       teamInfo.style.overflow = "auto";
+//       teamInfo.style.webkitOverflowScrolling = "touch";
+
+//       // Add scroll indicator
+//       const scrollIndicator = document.createElement("div");
+//       scrollIndicator.className = "team-scroll-indicator";
+//       scrollIndicator.innerHTML = "<span>Scroll for more</span>";
+//       scrollIndicator.style.cssText = `
+//         position: absolute;
+//         bottom: 15px;
+//         left: 50%;
+//         transform: translateX(-50%);
+//         background: rgba(0,0,0,0.7);
+//         color: white;
+//         padding: 5px 10px;
+//         border-radius: 4px;
+//         font-size: 12px;
+//         opacity: 0.8;
+//         transition: opacity 0.3s;
+//         pointer-events: none;
+//         z-index: 10;
+//       `;
+
+//       teamInfo.style.position = "relative";
+//       teamInfo.appendChild(scrollIndicator);
+
+//       // Hide indicator after scrolling
+//       teamInfo.addEventListener(
+//         "scroll",
+//         debounce(() => {
+//           scrollIndicator.style.opacity = "0";
+//           setTimeout(() => {
+//             scrollIndicator.style.display = "none";
+//           }, 300);
+//         }, 200)
+//       );
+//     } else {
+//       // Desktop version with custom scroll handling
+//       const observerOptions = {
+//         threshold: [0, 0.1, 0.5],
+//         rootMargin: "-10px 0px 0px 0px",
+//       };
+
+//       const observer = new IntersectionObserver((entries) => {
+//         entries.forEach((entry) => {
+//           isFooterAtTop = entry.isIntersecting && entry.intersectionRatio > 0.1;
+
+//           if (entry.isIntersecting) {
+//             aboutSection.classList.add("in-view");
+//           } else {
+//             aboutSection.classList.remove("in-view");
+//           }
+//         });
+//       }, observerOptions);
+
+//       observer.observe(aboutSection);
+
+//       const handleScroll = (event, isTouch = false) => {
+//         if (!isFooterAtTop) {
+//           return; // Let default scrolling happen
+//         }
+
+//         event.preventDefault();
+
+//         const maxScrollTop = teamInfo.scrollHeight - teamInfo.clientHeight;
+//         let scrollAmount;
+
+//         if (isTouch) {
+//           const touchY = event.touches[0].clientY;
+//           scrollAmount = touchStartY - touchY;
+//           touchStartY = touchY;
+//         } else {
+//           scrollAmount = event.deltaY;
+//         }
+
+//         scrollAmount = scrollAmount * 0.8;
+
+//         if (teamInfo.scrollTop >= maxScrollTop && scrollAmount > 0) {
+//           window.scrollBy({
+//             top: scrollAmount,
+//             behavior: "auto",
+//           });
+//         } else if (teamInfo.scrollTop <= 0 && scrollAmount < 0) {
+//           window.scrollBy({
+//             top: scrollAmount,
+//             behavior: "auto",
+//           });
+//         } else {
+//           teamInfo.scrollTop += scrollAmount;
+//         }
+//       };
+
+//       teamInfo.addEventListener(
+//         "touchstart",
+//         (event) => {
+//           touchStartY = event.touches[0].clientY;
+//         },
+//         { passive: true }
+//       );
+
+//       servicesInfo.addEventListener(
+//         "wheel",
+//         (event) => {
+//           if (isFooterAtTop) {
+//             handleScroll(event);
+//           }
+//         },
+//         { passive: false }
+//       );
+
+//       servicesInfo.addEventListener(
+//         "touchmove",
+//         (event) => {
+//           if (isFooterAtTop) {
+//             handleScroll(event, true);
+//           }
+//         },
+//         { passive: false }
+//       );
+
+//       aboutSection.tabIndex = 0;
+//       aboutSection.addEventListener("keydown", (e) => {
+//         if (isFooterAtTop && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+//           const scrollAmount = e.key === "ArrowUp" ? -50 : 50;
+//           teamInfo.scrollTop += scrollAmount;
+//           e.preventDefault();
+//         }
+//       });
+
+//       // Add scroll indicator for team-info section
+//       if (teamInfo.scrollHeight > teamInfo.clientHeight) {
+//         const scrollIndicator = document.createElement("div");
+//         scrollIndicator.className = "team-scroll-indicator";
+//         scrollIndicator.innerHTML = "<span>Scroll for more</span>";
+//         scrollIndicator.style.cssText = `
+//           position: absolute;
+//           bottom: 15px;
+//           left: 50%;
+//           transform: translateX(-50%);
+//           background: rgba(0,0,0,0.7);
+//           color: white;
+//           padding: 5px 10px;
+//           border-radius: 4px;
+//           font-size: 12px;
+//           opacity: 0.8;
+//           transition: opacity 0.3s;
+//           pointer-events: none;
+//           z-index: 10;
+//         `;
+
+//         teamInfo.style.position = "relative";
+//         teamInfo.appendChild(scrollIndicator);
+
+//         teamInfo.addEventListener(
+//           "scroll",
+//           debounce(() => {
+//             scrollIndicator.style.opacity = "0";
+//             setTimeout(() => {
+//               scrollIndicator.style.display = "none";
+//             }, 300);
+//           }, 200)
+//         );
+//       }
+//     }
+//   }
+
+//   // ===== Optimize Images =====
+//   function optimizeImages() {
+//     const projectImages = document.querySelectorAll(
+//       ".project-img, .project-img-small"
+//     );
+
+//     projectImages.forEach((img) => {
+//       if (!img.hasAttribute("loading")) {
+//         img.setAttribute("loading", "lazy");
+//       }
+//     });
+//   }
+
+//   optimizeImages();
+//   window.addEventListener("resize", debounce(optimizeImages, 200));
+
+//   // ===== Navbar Enhancement =====
+//   const navbar = document.querySelector(".navbar");
+
+//   if (navbar) {
+//     // FIX 1: Ensure navbar is initially centered
+//     navbar.style.transform = "translateX(-50%)";
+
+//     let lastScrollY = window.scrollY;
+//     let ticking = false;
+
+//     function updateNavbar() {
+//       const currentScrollY = window.scrollY;
+
+//       if (currentScrollY > lastScrollY && currentScrollY > 100) {
+//         navbar.style.transform = "translateY(-100%)";
+//       } else {
+//         navbar.style.transform = "translateX(-50%)";
+//       }
+
+//       lastScrollY = currentScrollY;
+//       ticking = false;
+//     }
+
+//     window.addEventListener("scroll", () => {
+//       if (!ticking) {
+//         window.requestAnimationFrame(updateNavbar);
+//         ticking = true;
+//       }
+//     });
+
+//     navbar.style.transition = "transform 0.3s ease";
+//   }
+// });
 document.addEventListener("DOMContentLoaded", () => {
   // ===== Performance Utilities =====
   function debounce(func, wait = 20, immediate = true) {
@@ -726,7 +1232,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getScrollAmount() {
     if (window.innerWidth <= 576) {
-      return window.innerWidth * 0.85;
+      return 277; // Width of project-img on mobile
     } else if (window.innerWidth <= 768) {
       return 350;
     } else if (window.innerWidth <= 992) {
@@ -743,60 +1249,36 @@ document.addEventListener("DOMContentLoaded", () => {
     let initialMargin = "";
     let lastTouchTime = 0;
     let lastClickTime = 0;
+    let startY = 0; // Track vertical touch position
+    let isScrollingHorizontally = false;
 
     slider.setAttribute("role", "region");
     slider.setAttribute("aria-label", "Project images carousel");
-
-    const scrollIndicator = document.createElement("div");
-    scrollIndicator.className = "scroll-indicator";
-    scrollIndicator.innerHTML = "<span>Scroll for more</span>";
-    scrollIndicator.style.cssText = `
-      position: absolute;
-      right: 15px;
-      bottom: 15px;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-size: 12px;
-      opacity: 0.8;
-      transition: opacity 0.3s;
-      pointer-events: none;
-      z-index: 10;
-    `;
-
-    if (slider.parentNode) {
-      slider.parentNode.style.position = "relative";
-      slider.parentNode.appendChild(scrollIndicator);
-    }
-
-    const hideScrollIndicator = () => {
-      scrollIndicator.style.opacity = "0";
-      setTimeout(() => {
-        scrollIndicator.style.display = "none";
-      }, 300);
-    };
 
     if (window.innerWidth >= 1440) {
       initialMargin = window.getComputedStyle(slider).marginLeft;
     }
 
+    // Modified touch event handlers to allow vertical scrolling
     slider.addEventListener(
       "touchstart",
       (e) => {
         isDragging = true;
         startX = e.touches[0].pageX - slider.offsetLeft;
+        startY = e.touches[0].pageY; // Track vertical position
         scrollLeft = slider.scrollLeft;
         slider.style.scrollBehavior = "auto";
         lastTouchTime = Date.now();
+        isScrollingHorizontally = false; // Reset direction detection
       },
       { passive: true }
-    ); // Changed to passive for better performance
+    );
 
     slider.addEventListener("touchend", () => {
       isDragging = false;
       slider.style.scrollBehavior = "smooth";
 
+      // Snap to closest card after touch end
       const scrollAmount = getScrollAmount();
       const remainder = slider.scrollLeft % scrollAmount;
 
@@ -805,8 +1287,6 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         slider.scrollLeft -= remainder;
       }
-
-      hideScrollIndicator();
     });
 
     slider.addEventListener(
@@ -815,14 +1295,25 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!isDragging) return;
 
         const x = e.touches[0].pageX - slider.offsetLeft;
-        const walk = (x - startX) * 1.5;
+        const y = e.touches[0].pageY;
+        const walkX = (x - startX) * 1.5;
+        const walkY = y - startY;
 
-        // Only prevent default if significant horizontal movement
-        if (Math.abs(walk) > 10) {
-          e.preventDefault();
-          slider.scrollLeft = scrollLeft - walk;
-          hideScrollIndicator();
+        // Determine scroll direction if not already determined
+        if (
+          !isScrollingHorizontally &&
+          Math.abs(walkX) > Math.abs(walkY) &&
+          Math.abs(walkX) > 10
+        ) {
+          isScrollingHorizontally = true;
         }
+
+        // Only handle horizontal scrolling and prevent default if we're scrolling horizontally
+        if (isScrollingHorizontally) {
+          e.preventDefault(); // Only prevent default for horizontal scrolling
+          slider.scrollLeft = scrollLeft - walkX;
+        }
+        // Otherwise, let the default vertical scrolling happen
       },
       { passive: false }
     );
@@ -854,6 +1345,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    // Mouse event handlers
     slider.addEventListener("mousedown", (e) => {
       isDragging = true;
       startX = e.pageX - slider.offsetLeft;
@@ -892,7 +1384,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const x = e.pageX - slider.offsetLeft;
       const walk = (x - startX) * 1.5;
       slider.scrollLeft = scrollLeft - walk;
-      hideScrollIndicator();
     });
 
     slider.tabIndex = 0;
@@ -940,14 +1431,6 @@ document.addEventListener("DOMContentLoaded", () => {
           widgets.style.setProperty("--widgets-margin", `${sliderMargin}px`);
         }
       }
-
-      if (window.innerWidth <= 576) {
-        scrollIndicator.style.right = "10px";
-        scrollIndicator.style.bottom = "10px";
-      } else {
-        scrollIndicator.style.right = "15px";
-        scrollIndicator.style.bottom = "15px";
-      }
     }
 
     updateMargins();
@@ -957,24 +1440,30 @@ document.addEventListener("DOMContentLoaded", () => {
       card.style.scrollSnapAlign = "start";
     });
 
-    window.addEventListener("resize", debounce(updateMargins, 100));
+    window.addEventListener("resize", updateMargins);
 
-    const sliderObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (slider.scrollWidth > slider.clientWidth) {
-              scrollIndicator.style.display = "block";
-              scrollIndicator.style.opacity = "0.8";
-              setTimeout(hideScrollIndicator, 3000);
+    // Add observer to reset slider position when not in focus
+    const project = slider.closest(".project");
+    if (project) {
+      const resetObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            // When project goes out of view, reset slider to first position
+            if (!entry.isIntersecting) {
+              setTimeout(() => {
+                slider.scrollTo({
+                  left: 0,
+                  behavior: "auto",
+                });
+              }, 300);
             }
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+          });
+        },
+        { threshold: 0.1 }
+      );
 
-    sliderObserver.observe(slider);
+      resetObserver.observe(project);
+    }
   });
 
   // ===== About Section Scroll Enhancement =====
@@ -983,53 +1472,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const aboutSection = document.querySelector(".about-section");
 
   if (teamInfo && servicesInfo && aboutSection) {
-    let isFooterAtTop = false;
-    let touchStartY = 0;
+    // Check if we're on a desktop device (larger than tablets)
+    // Only apply special scroll behavior on desktop devices (>= 992px)
+    const isDesktop = window.innerWidth >= 992;
 
-    // Fix for mobile scrolling issues at the bottom of the page
-    const isMobile = window.innerWidth <= 768;
-
-    // Use different approach for mobile vs desktop
-    if (isMobile) {
-      // On mobile, use simpler approach with native scrolling
+    if (!isDesktop) {
+      // For mobile and tablets, use simple native scrolling
       teamInfo.style.overflow = "auto";
       teamInfo.style.webkitOverflowScrolling = "touch";
 
-      // Add scroll indicator
-      const scrollIndicator = document.createElement("div");
-      scrollIndicator.className = "team-scroll-indicator";
-      scrollIndicator.innerHTML = "<span>Scroll for more</span>";
-      scrollIndicator.style.cssText = `
-        position: absolute;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.7);
-        color: white;
-        padding: 5px 10px;
-        border-radius: 4px;
-        font-size: 12px;
-        opacity: 0.8;
-        transition: opacity 0.3s;
-        pointer-events: none;
-        z-index: 10;
-      `;
+      // Make sure the about section has normal scroll behavior
+      aboutSection.style.overflow = "visible";
+      aboutSection.style.height = "auto";
 
-      teamInfo.style.position = "relative";
-      teamInfo.appendChild(scrollIndicator);
-
-      // Hide indicator after scrolling
-      teamInfo.addEventListener(
-        "scroll",
-        debounce(() => {
-          scrollIndicator.style.opacity = "0";
-          setTimeout(() => {
-            scrollIndicator.style.display = "none";
-          }, 300);
-        }, 200)
-      );
+      // Ensure services info section has normal scroll behavior
+      servicesInfo.style.position = "static";
     } else {
       // Desktop version with custom scroll handling
+      let isFooterAtTop = false;
+      let touchStartY = 0;
+
       const observerOptions = {
         threshold: [0, 0.1, 0.5],
         rootMargin: "-10px 0px 0px 0px",
@@ -1041,8 +1503,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (entry.isIntersecting) {
             aboutSection.classList.add("in-view");
+
+            // When footer is in view, fix the services info in place
+            if (isDesktop) {
+              servicesInfo.style.position = "sticky";
+              servicesInfo.style.top = "0";
+            }
           } else {
             aboutSection.classList.remove("in-view");
+
+            // When footer is not in view, let services info scroll normally
+            servicesInfo.style.position = "static";
           }
         });
       }, observerOptions);
@@ -1050,7 +1521,7 @@ document.addEventListener("DOMContentLoaded", () => {
       observer.observe(aboutSection);
 
       const handleScroll = (event, isTouch = false) => {
-        if (!isFooterAtTop) {
+        if (!isFooterAtTop || !isDesktop) {
           return; // Let default scrolling happen
         }
 
@@ -1087,7 +1558,9 @@ document.addEventListener("DOMContentLoaded", () => {
       teamInfo.addEventListener(
         "touchstart",
         (event) => {
-          touchStartY = event.touches[0].clientY;
+          if (isDesktop) {
+            touchStartY = event.touches[0].clientY;
+          }
         },
         { passive: true }
       );
@@ -1095,7 +1568,7 @@ document.addEventListener("DOMContentLoaded", () => {
       servicesInfo.addEventListener(
         "wheel",
         (event) => {
-          if (isFooterAtTop) {
+          if (isFooterAtTop && isDesktop) {
             handleScroll(event);
           }
         },
@@ -1105,7 +1578,7 @@ document.addEventListener("DOMContentLoaded", () => {
       servicesInfo.addEventListener(
         "touchmove",
         (event) => {
-          if (isFooterAtTop) {
+          if (isFooterAtTop && isDesktop) {
             handleScroll(event, true);
           }
         },
@@ -1114,47 +1587,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
       aboutSection.tabIndex = 0;
       aboutSection.addEventListener("keydown", (e) => {
-        if (isFooterAtTop && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+        if (
+          isFooterAtTop &&
+          isDesktop &&
+          (e.key === "ArrowUp" || e.key === "ArrowDown")
+        ) {
           const scrollAmount = e.key === "ArrowUp" ? -50 : 50;
           teamInfo.scrollTop += scrollAmount;
           e.preventDefault();
         }
       });
 
-      // Add scroll indicator for team-info section
-      if (teamInfo.scrollHeight > teamInfo.clientHeight) {
-        const scrollIndicator = document.createElement("div");
-        scrollIndicator.className = "team-scroll-indicator";
-        scrollIndicator.innerHTML = "<span>Scroll for more</span>";
-        scrollIndicator.style.cssText = `
-          position: absolute;
-          bottom: 15px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: rgba(0,0,0,0.7);
-          color: white;
-          padding: 5px 10px;
-          border-radius: 4px;
-          font-size: 12px;
-          opacity: 0.8;
-          transition: opacity 0.3s;
-          pointer-events: none;
-          z-index: 10;
-        `;
+      // Update scroll behavior on resize
+      window.addEventListener(
+        "resize",
+        debounce(() => {
+          const newIsDesktop = window.innerWidth >= 992;
 
-        teamInfo.style.position = "relative";
-        teamInfo.appendChild(scrollIndicator);
-
-        teamInfo.addEventListener(
-          "scroll",
-          debounce(() => {
-            scrollIndicator.style.opacity = "0";
-            setTimeout(() => {
-              scrollIndicator.style.display = "none";
-            }, 300);
-          }, 200)
-        );
-      }
+          // If device type changed, reload the page to apply correct behavior
+          if (isDesktop !== newIsDesktop) {
+            location.reload();
+          }
+        }, 250)
+      );
     }
   }
 
@@ -1178,7 +1633,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const navbar = document.querySelector(".navbar");
 
   if (navbar) {
-    // FIX 1: Ensure navbar is initially centered
+    // Ensure navbar is initially centered
     navbar.style.transform = "translateX(-50%)";
 
     let lastScrollY = window.scrollY;
