@@ -1748,7 +1748,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     slider.addEventListener("touchend", () => {
       isDragging = false;
-      slider.style.scrollBehavior = "smooth";
 
       // Only snap to grid on desktop, not on mobile/tablet
       if (!isMobileOrTablet) {
@@ -1873,12 +1872,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const scrollAmount = isMobileOrTablet ? 100 : getScrollAmount();
         slider.scrollBy({
           left: -scrollAmount,
+          behavior: "smooth",
         });
         e.preventDefault();
       } else if (e.key === "ArrowRight") {
         const scrollAmount = isMobileOrTablet ? 100 : getScrollAmount();
         slider.scrollBy({
           left: scrollAmount,
+          behavior: "smooth",
         });
         e.preventDefault();
       }
