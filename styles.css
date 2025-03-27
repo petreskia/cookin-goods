@@ -577,7 +577,6 @@ img {
 
   .projects-slider {
     width: 100%;
-    padding-left: 15px; /* Match the padding from the project container */
     box-sizing: border-box;
     touch-action: pan-x pan-y; /* Allow both horizontal and vertical touch actions */
   }

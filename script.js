@@ -1748,6 +1748,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     slider.addEventListener("touchend", () => {
       isDragging = false;
+      slider.style.scrollBehavior = "smooth";
 
       // Only snap to grid on desktop, not on mobile/tablet
       if (!isMobileOrTablet) {
