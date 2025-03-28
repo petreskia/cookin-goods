@@ -218,7 +218,8 @@ img {
   padding: 0 15px;
   min-height: 100vh;
   position: relative;
-  width: 1419px;
+  width: 100%;
+  max-width: 1419px;
   margin: 0 auto;
   z-index: 10;
 }
@@ -342,55 +343,270 @@ img {
   opacity: 70%;
 }
 
-/* Media query for screens below 1200px (laptops) */
-@media (max-width: 1200px) {
+/* Large Desktop (1200px - 1439px) */
+@media (max-width: 1439px) {
   .about-section {
     width: 100%;
-    padding: 0 20px;
+    padding: 0 30px;
+    gap: 30px;
   }
-  .team-info {
-    width: 100%;
-    max-height: none;
+
+  .fixed-card {
+    width: 400px;
+    height: 500px;
   }
+
   .card {
-    margin: 20px auto;
-    max-width: 90%;
+    max-width: 400px;
   }
-  .services-info-container {
-    align-items: center;
+
+  .team-info {
+    width: 400px;
   }
+
   .services-info {
-    position: relative;
-    padding-top: 0;
+    gap: 30px;
   }
 }
 
-/* Media query for screens below 768px (tablets) */
-@media (max-width: 768px) {
+/* Small Desktop and Large Tablets (992px - 1199px) */
+@media (max-width: 1199px) {
+  .about-section {
+    padding: 0 20px;
+    gap: 20px;
+  }
+
+  .fixed-card {
+    width: 350px;
+    height: 450px;
+  }
+
+  .card {
+    max-width: 350px;
+  }
+
+  .team-info {
+    width: 350px;
+  }
+
+  .services-info {
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 60px;
+  }
+
+  .service-card .card-inner {
+    font-size: 20px;
+    padding: 20px;
+  }
+
+  .about-section h2 {
+    font-size: 32px;
+    padding-bottom: 25px;
+  }
+}
+
+/* Tablets (768px - 991px) */
+@media (max-width: 991px) {
   .about-section {
     flex-direction: column;
+    padding: 30px 20px;
+    min-height: auto;
   }
+
   .team-info {
+    width: 100%;
+    max-width: 600px;
+    max-height: none;
     overflow-y: visible;
+    margin: 0 auto;
   }
+
+  .fixed-card {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1.25;
+  }
+
   .card {
-    margin: 20px auto;
-    max-width: 90%;
+    max-width: 100%;
+    margin-bottom: 30px;
   }
+
   .services-info-container {
+    width: 100%;
+    max-width: 600px;
     align-items: center;
+    margin: 0 auto;
   }
+
   .services-info {
-    position: relative;
-    padding-top: 0;
+    position: static;
+    width: 100%;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 20px;
+  }
+
+  .service-card {
+    width: 100%;
+  }
+
+  .service-card .card-inner {
+    width: 100%;
+    height: auto;
+    min-height: auto;
+  }
+
+  .about-section h2 {
+    font-size: 28px;
+    padding-bottom: 20px;
+    text-align: left;
+  }
+}
+
+/* Large Mobile (576px - 767px) */
+@media (max-width: 767px) {
+  .about-section {
+    padding: 20px 15px;
+  }
+
+  .team-info {
+    max-width: 100%;
+  }
+
+  .card-content {
+    padding: 15px 0;
+  }
+
+  .card-content h3 {
+    font-size: 16px;
+  }
+
+  .card-content p {
+    font-size: 14px;
+    width: 100%;
+    line-height: 1.4;
+  }
+
+  .services-info-container {
+    max-width: 100%;
+  }
+
+  .service-card .card-inner {
+    padding: 15px;
+    font-size: 18px;
+  }
+
+  .service-card ul {
+    gap: 15px;
+  }
+
+  .service-card h4 {
+    margin-bottom: 15px;
+  }
+
+  .about-section h2 {
+    font-size: 24px;
+    padding-bottom: 15px;
+  }
+}
+
+/* Mobile (375px - 575px) */
+@media (max-width: 575px) {
+  .about-section {
+    padding: 15px 15px 30px;
+  }
+
+  .fixed-card {
+    aspect-ratio: 1/1.5;
+    border-radius: 0;
+  }
+
+  .fixed-card img {
+    border-radius: 0;
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
+
+  .card-content {
+    padding: 12px 0;
+    gap: 8px;
+  }
+
+  .card-content h3 {
+    font-size: 15px;
+  }
+
+  .card-content p {
+    font-size: 14px;
+  }
+
+  .card-content a {
+    font-size: 13px;
+  }
+
+  .service-card .card-inner {
+    padding: 15px;
+    font-size: 16px;
+  }
+
+  .service-card ul {
+    gap: 12px;
+  }
+
+  .service-card li {
+    font-size: 15px;
+  }
+
+  .service-card p {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .about-section h2 {
+    font-size: 22px;
+    padding-bottom: 12px;
+  }
+}
+
+/* Small Mobile (320px - 374px) */
+@media (max-width: 374px) {
+  .about-section {
+    padding: 10px 10px 20px;
+  }
+
+  .card-content h3 {
+    font-size: 14px;
+  }
+
+  .card-content p {
+    font-size: 13px;
+  }
+
+  .service-card .card-inner {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .service-card ul {
+    gap: 10px;
+  }
+
+  .service-card li {
+    font-size: 14px;
+  }
+
+  .about-section h2 {
+    font-size: 20px;
+    padding-bottom: 10px;
   }
 }
 
 /* Media query for screens below 480px (mobile devices) */
-@media (max-width: 480px) {
-  .about-section {
-    padding: 0 10px;
-  }
+/* @media (max-width: 480px) {
   .card {
     margin: 20px auto;
     max-width: 90%;
@@ -399,10 +615,16 @@ img {
     align-items: center;
   }
   .services-info {
-    position: relative;
+    position: static;
     padding-top: 0;
   }
-}
+  .services-info ul {
+    display: block;
+  }
+  .services-info li {
+    display: block;
+  }
+} */
 
 /* Media Queries for Responsive Design */
 

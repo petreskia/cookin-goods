@@ -2189,18 +2189,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const teamInfo = document.querySelector(".team-info");
 
   function handleScroll() {
-    const aboutSectionTop = aboutSection.getBoundingClientRect().top;
+    if (window.innerWidth >= 768) {
+      const aboutSectionTop = aboutSection.getBoundingClientRect().top;
 
-    if (aboutSectionTop <= 0) {
-      servicesInfo.style.position = "fixed";
-      servicesInfo.style.top = "0";
-      servicesInfo.style.width = "auto";
-      teamInfo.style.width = "100%";
+      if (aboutSectionTop <= 0) {
+        servicesInfo.style.position = "fixed";
+        servicesInfo.style.top = "0";
+        servicesInfo.style.width = "auto";
+        teamInfo.style.width = "100%";
+      } else {
+        servicesInfo.style.position = "relative";
+        servicesInfo.style.top = "auto";
+        servicesInfo.style.width = "auto";
+        teamInfo.style.width = "453px";
+      }
     } else {
-      servicesInfo.style.position = "relative";
+      servicesInfo.style.position = "static";
       servicesInfo.style.top = "auto";
       servicesInfo.style.width = "auto";
-      teamInfo.style.width = "453px";
+      teamInfo.style.width = "100%";
     }
   }
 
