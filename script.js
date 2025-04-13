@@ -318,8 +318,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Cursor
+// Cursor
 const cursor = document.querySelector(".custom-cursor");
-const slider = document.querySelector(".projects-slider");
+const sliders = document.querySelectorAll(".projects-slider"); // Use querySelectorAll to get all sliders
 
 // Move the cursor with mouse
 document.addEventListener("mousemove", (e) => {
@@ -327,24 +328,27 @@ document.addEventListener("mousemove", (e) => {
   cursor.style.top = e.clientY + "px";
 });
 
-// Handle hover state
-slider.addEventListener("mouseenter", () => {
-  cursor.classList.add("slider-hover");
-});
+// Add event listeners to each slider
+sliders.forEach((slider) => {
+  // Handle hover state
+  slider.addEventListener("mouseenter", () => {
+    cursor.classList.add("slider-hover");
+  });
 
-slider.addEventListener("mouseleave", () => {
-  cursor.classList.remove("slider-hover");
-  cursor.textContent = ""; // Remove arrow when exiting
-});
+  slider.addEventListener("mouseleave", () => {
+    cursor.classList.remove("slider-hover");
+    cursor.textContent = ""; // Remove arrow when exiting
+  });
 
-// Handle direction arrows
-slider.addEventListener("mousemove", (e) => {
-  const rect = slider.getBoundingClientRect();
-  const centerX = rect.left + rect.width / 2;
+  // Handle direction arrows
+  slider.addEventListener("mousemove", (e) => {
+    const rect = slider.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
 
-  if (e.clientX < centerX) {
-    cursor.textContent = "←";
-  } else {
-    cursor.textContent = "→";
-  }
+    if (e.clientX < centerX) {
+      cursor.textContent = "←";
+    } else {
+      cursor.textContent = "→";
+    }
+  });
 });
