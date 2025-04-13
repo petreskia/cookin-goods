@@ -871,9 +871,8 @@ img {
 
 /* Larger cursor with arrow */
 .custom-cursor.arrow-active {
-  width: 40px; /* Larger size when arrow is active */
-  height: 40px;
-  border-color: #fff;
+  width: 50px; /* Larger size when arrow is active */
+  height: 50px;
 }
 
 /* Slider hover state (without arrow) */
