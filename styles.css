@@ -20,6 +20,7 @@ body {
   line-height: 1.2;
   overflow-x: hidden; /* Prevent horizontal scrolling */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  cursor: none !important;
 }
 
 html {
@@ -137,13 +138,13 @@ img {
   user-select: none;
   margin-left: 0; /* Reset margin on smaller screens */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  cursor: grab; /* Indicate draggable */
+  /* cursor: grab;  */
   will-change: transform; /* Optimize for animations */
 }
 
-.projects-slider:active {
-  cursor: grabbing; /* Change cursor when actively dragging */
-}
+/* .projects-slider:active {
+  cursor: grabbing;
+} */
 
 .projects-slider::-webkit-scrollbar {
   display: none;
@@ -851,28 +852,38 @@ img {
 }
 
 /* Custom cursor base style */
+/* Default cursor state */
 .custom-cursor {
-  position: fixed;
-  width: 20px;
+  width: 20px; /* Small default size */
   height: 20px;
   border-radius: 50%;
   background-color: yellow;
-  pointer-events: none;
-  z-index: 1000;
-  transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease,
-    transform 0.1s linear;
+  color: black;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  color: black;
-  font-weight: bold;
+  transition: width 0.2s, height 0.2s;
+  pointer-events: none;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
 }
 
-/* When inside slider */
+/* Larger cursor with arrow */
+.custom-cursor.arrow-active {
+  width: 40px; /* Larger size when arrow is active */
+  height: 40px;
+  border-color: #fff;
+}
+
+/* Slider hover state (without arrow) */
 .custom-cursor.slider-hover {
-  width: 60px;
-  height: 60px;
-  background-color: yellow;
-  font-size: 20px;
+  width: 20px; /* Keep small when hovering slider but no arrow */
+  height: 20px;
+}
+
+/* Combined state - both slider hover and arrow active */
+.custom-cursor.slider-hover.arrow-active {
+  width: 50px; /* Larger size when arrow is active */
+  height: 50px;
 }
