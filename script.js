@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const teamInfo = document.querySelector(".team-info");
 
   function handleScroll() {
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 1440) {
       const aboutSectionTop = aboutSection.getBoundingClientRect().top;
 
       if (aboutSectionTop <= 0) {

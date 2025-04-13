@@ -20,7 +20,6 @@ body {
   line-height: 1.2;
   overflow-x: hidden; /* Prevent horizontal scrolling */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  cursor: none !important;
 }
 
 html {
@@ -395,17 +394,15 @@ img {
   }
 
   .team-info {
-    width: 350px;
+    max-width: max-content;
   }
 
   .services-info {
-    flex-direction: column;
     gap: 20px;
-    padding-top: 60px;
   }
 
   .service-card .card-inner {
-    font-size: 20px;
+    font-size: 15px;
     padding: 20px;
   }
 
@@ -614,27 +611,6 @@ img {
   }
 }
 
-/* Media query for screens below 480px (mobile devices) */
-/* @media (max-width: 480px) {
-  .card {
-    margin: 20px auto;
-    max-width: 90%;
-  }
-  .services-info-container {
-    align-items: center;
-  }
-  .services-info {
-    position: static;
-    padding-top: 0;
-  }
-  .services-info ul {
-    display: block;
-  }
-  .services-info li {
-    display: block;
-  }
-} */
-
 /* Media Queries for Responsive Design */
 
 /* Large tablets and small desktops */
@@ -676,6 +652,9 @@ img {
 
   .project {
     margin-bottom: 120px;
+  }
+  .custom-cursor {
+    display: none !important;
   }
 }
 
