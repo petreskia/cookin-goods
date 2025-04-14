@@ -1,11 +1,333 @@
+// document.addEventListener("DOMContentLoaded", () => {
+//   // ===== Performance Utilities =====
+//   function debounce(func, wait = 20, immediate = true) {
+//     let timeout;
+//     return function () {
+//       const context = this,
+//         args = arguments;
+//       const later = function () {
+//         timeout = null;
+//         if (!immediate) func.apply(context, args);
+//       };
+//       const callNow = immediate && !timeout;
+//       clearTimeout(timeout);
+//       timeout = setTimeout(later, wait);
+//       if (callNow) func.apply(context, args);
+//     };
+//   }
+
+//   // ===== Project Sliders Enhancement =====
+//   const sliders = document.querySelectorAll(".projects-slider");
+
+//   function getScrollAmount() {
+//     if (window.innerWidth <= 576) {
+//       return 277; // Width of project-img on mobile
+//     } else if (window.innerWidth <= 768) {
+//       return 350;
+//     } else if (window.innerWidth <= 992) {
+//       return 400;
+//     } else {
+//       return 453;
+//     }
+//   }
+
+//   sliders.forEach((slider) => {
+//     let isDragging = false;
+//     let startX = 0;
+//     let scrollLeft = 0;
+//     let initialMargin = "";
+//     let lastTouchTime = 0;
+//     let lastClickTime = 0;
+//     let startY = 0; // Track vertical touch position
+//     let isScrollingHorizontally = false;
+
+//     // Check if we're on mobile/tablet
+//     const isMobileOrTablet = window.innerWidth < 992;
+
+//     slider.setAttribute("role", "region");
+//     slider.setAttribute("aria-label", "Project images carousel");
+
+//     if (window.innerWidth >= 1440) {
+//       initialMargin = window.getComputedStyle(slider).marginLeft;
+//     }
+
+//     // Modified touch event handlers to allow vertical scrolling
+//     slider.addEventListener(
+//       "touchstart",
+//       (e) => {
+//         isDragging = true;
+//         startX = e.touches[0].pageX - slider.offsetLeft;
+//         startY = e.touches[0].pageY; // Track vertical position
+//         scrollLeft = slider.scrollLeft;
+//         slider.style.scrollBehavior = "auto";
+//         lastTouchTime = Date.now();
+//         isScrollingHorizontally = false; // Reset direction detection
+//       },
+//       { passive: true }
+//     );
+
+//     slider.addEventListener("touchend", () => {
+//       isDragging = false;
+//       slider.style.scrollBehavior = "smooth";
+
+//       // Only snap to grid on desktop, not on mobile/tablet
+//       if (!isMobileOrTablet) {
+//         const scrollAmount = getScrollAmount();
+//         const remainder = slider.scrollLeft % scrollAmount;
+
+//         if (remainder > scrollAmount / 2) {
+//           slider.scrollLeft += scrollAmount - remainder;
+//         } else {
+//           slider.scrollLeft -= remainder;
+//         }
+//       }
+//     });
+
+//     let lastMoveTime = 0;
+
+//     slider.addEventListener(
+//       "touchmove",
+//       (e) => {
+//         if (!isDragging) return;
+
+//         const x = e.touches[0].pageX - slider.offsetLeft;
+//         const y = e.touches[0].pageY;
+//         const walkX = x - startX;
+//         const walkY = y - startY;
+
+//         const now = Date.now();
+//         if (now - lastMoveTime < 10) return; // Limit FPS
+//         lastMoveTime = now;
+
+//         // Determine scroll direction if not already determined
+//         if (
+//           !isScrollingHorizontally &&
+//           Math.abs(walkX) > Math.abs(walkY) &&
+//           Math.abs(walkX) > 10
+//         ) {
+//           isScrollingHorizontally = true;
+//         }
+
+//         // Only handle horizontal scrolling and prevent default if we're scrolling horizontally
+//         if (isScrollingHorizontally) {
+//           e.preventDefault(); // Only prevent default for horizontal scrolling
+//           slider.scrollLeft = scrollLeft - walkX;
+//         }
+//         // Otherwise, let the default vertical scrolling happen
+//       },
+//       { passive: false }
+//     );
+
+//     slider.addEventListener("click", (e) => {
+//       if (isDragging || Date.now() - lastTouchTime < 300) {
+//         return;
+//       }
+
+//       if (Date.now() - lastClickTime < 300) {
+//         return;
+//       }
+//       lastClickTime = Date.now();
+
+//       // Only implement click-to-scroll on desktop
+//       if (!isMobileOrTablet) {
+//         const clickX = e.clientX - slider.getBoundingClientRect().left;
+//         const sliderCenterX = slider.offsetWidth / 2;
+//         const scrollAmount = getScrollAmount();
+
+//         if (clickX < sliderCenterX) {
+//           slider.scrollBy({
+//             left: -scrollAmount,
+//             behavior: "smooth",
+//           });
+//         } else {
+//           slider.scrollBy({
+//             left: scrollAmount,
+//             behavior: "smooth",
+//           });
+//         }
+//       }
+//     });
+
+//     // Mouse event handlers
+//     slider.addEventListener("mousedown", (e) => {
+//       isDragging = true;
+//       startX = e.pageX - slider.offsetLeft;
+//       scrollLeft = slider.scrollLeft;
+//       slider.style.scrollBehavior = "auto";
+//       // slider.style.cursor = "grabbing";
+//       e.preventDefault();
+//     });
+
+//     slider.addEventListener("mouseleave", () => {
+//       if (isDragging) {
+//         isDragging = false;
+//         slider.style.scrollBehavior = "smooth";
+//         // slider.style.cursor = "grab";
+//       }
+//     });
+
+//     slider.addEventListener("mouseup", () => {
+//       isDragging = false;
+//       slider.style.scrollBehavior = "smooth";
+//       // slider.style.cursor = "grab";
+
+//       // Only snap to grid on desktop
+//       if (!isMobileOrTablet) {
+//         const scrollAmount = getScrollAmount();
+//         const remainder = slider.scrollLeft % scrollAmount;
+
+//         if (remainder > scrollAmount / 2) {
+//           slider.scrollLeft += scrollAmount - remainder;
+//         } else {
+//           slider.scrollLeft -= remainder;
+//         }
+//       }
+//     });
+
+//     slider.addEventListener("mousemove", (e) => {
+//       if (!isDragging) return;
+//       e.preventDefault();
+//       const x = e.pageX - slider.offsetLeft;
+//       const walk = (x - startX) * 2;
+//       slider.scrollLeft = scrollLeft - walk;
+//     });
+
+//     slider.tabIndex = 0;
+//     slider.addEventListener("keydown", (e) => {
+//       if (e.key === "ArrowLeft") {
+//         // On mobile/tablet, scroll less for a more natural feel
+//         const scrollAmount = isMobileOrTablet ? 100 : getScrollAmount();
+//         slider.scrollBy({
+//           left: -scrollAmount,
+//           behavior: "smooth",
+//         });
+//         e.preventDefault();
+//       } else if (e.key === "ArrowRight") {
+//         const scrollAmount = isMobileOrTablet ? 100 : getScrollAmount();
+//         slider.scrollBy({
+//           left: scrollAmount,
+//           behavior: "smooth",
+//         });
+//         e.preventDefault();
+//       }
+//     });
+
+//     function updateMargins() {
+//       let sliderMargin;
+
+//       if (window.innerWidth >= 1440) {
+//         sliderMargin = (window.innerWidth - 1440) / 2;
+//       } else if (window.innerWidth >= 992) {
+//         sliderMargin = 15;
+//       } else if (window.innerWidth >= 768) {
+//         sliderMargin = 10;
+//       } else {
+//         sliderMargin = 15;
+//       }
+
+//       slider.style.marginLeft = `${sliderMargin}px`;
+
+//       const project = slider.closest(".project");
+//       if (project) {
+//         const info = project.querySelector(".project-info");
+//         const widgets = project.querySelector(".widgets-container");
+
+//         if (info) {
+//           info.style.setProperty("--info-margin", `${sliderMargin}px`);
+//         }
+
+//         if (widgets) {
+//           widgets.style.setProperty("--widgets-margin", `${sliderMargin}px`);
+//         }
+//       }
+//     }
+
+//     updateMargins();
+
+//     const cards = slider.querySelectorAll(".project-card");
+//     cards.forEach((card) => {
+//       // Only apply scroll-snap-align on desktop
+//       if (isMobileOrTablet) {
+//         card.style.scrollSnapAlign = "start";
+//       }
+//     });
+
+//     window.addEventListener("resize", updateMargins);
+
+//     // Add observer to reset slider position when not in focus
+//     const project = slider.closest(".project");
+//     if (project) {
+//       const resetObserver = new IntersectionObserver(
+//         (entries) => {
+//           entries.forEach((entry) => {
+//             // When project goes out of view, reset slider to first position
+//             if (!entry.isIntersecting) {
+//               setTimeout(() => {
+//                 slider.scrollTo({
+//                   left: 0,
+//                   behavior: "auto",
+//                 });
+//               }, 300);
+//             }
+//           });
+//         },
+//         { threshold: 0.1 }
+//       );
+
+//       resetObserver.observe(project);
+//     }
+//   });
+
+//   // ===== Navbar Enhancement =====
+//   const navbar = document.querySelector(".navbar");
+
+//   if (navbar) {
+//     // Keep navbar fixed at the top at all times
+//     navbar.style.transform = "translateX(-50%)";
+//     navbar.style.position = "fixed";
+//     navbar.style.top = "20px";
+//     navbar.style.left = "50%";
+//     navbar.style.zIndex = "1000";
+//   }
+// });
+// document.addEventListener("DOMContentLoaded", () => {
+//   const aboutSection = document.querySelector(".about-section");
+//   const servicesInfo = document.querySelector(".services-info");
+//   const teamInfo = document.querySelector(".team-info");
+
+//   function handleScroll() {
+//     if (window.innerWidth >= 1440) {
+//       const aboutSectionTop = aboutSection.getBoundingClientRect().top;
+
+//       if (aboutSectionTop <= 0) {
+//         servicesInfo.style.position = "fixed";
+//         servicesInfo.style.top = "0";
+//         servicesInfo.style.width = "auto";
+//         teamInfo.style.width = "100%";
+//       } else {
+//         servicesInfo.style.position = "relative";
+//         servicesInfo.style.top = "auto";
+//         servicesInfo.style.width = "auto";
+//         teamInfo.style.width = "453px";
+//       }
+//     } else {
+//       servicesInfo.style.position = "static";
+//       servicesInfo.style.top = "auto";
+//       servicesInfo.style.width = "auto";
+//       teamInfo.style.width = "100%";
+//     }
+//   }
+
+//   window.addEventListener("scroll", handleScroll);
+// });
+
 document.addEventListener("DOMContentLoaded", () => {
   // ===== Performance Utilities =====
-  function debounce(func, wait = 20, immediate = true) {
+  const debounce = (func, wait = 20, immediate = true) => {
     let timeout;
-    return function () {
-      const context = this,
-        args = arguments;
-      const later = function () {
+    return function (...args) {
+      const context = this;
+      const later = () => {
         timeout = null;
         if (!immediate) func.apply(context, args);
       };
@@ -14,54 +336,45 @@ document.addEventListener("DOMContentLoaded", () => {
       timeout = setTimeout(later, wait);
       if (callNow) func.apply(context, args);
     };
-  }
+  };
 
   // ===== Project Sliders Enhancement =====
   const sliders = document.querySelectorAll(".projects-slider");
 
-  function getScrollAmount() {
-    if (window.innerWidth <= 576) {
-      return 277; // Width of project-img on mobile
-    } else if (window.innerWidth <= 768) {
-      return 350;
-    } else if (window.innerWidth <= 992) {
-      return 400;
-    } else {
-      return 453;
-    }
-  }
+  const getScrollAmount = () => {
+    const w = window.innerWidth;
+    if (w <= 576) return 277;
+    if (w <= 768) return 350;
+    if (w <= 992) return 400;
+    return 453;
+  };
 
   sliders.forEach((slider) => {
-    let isDragging = false;
-    let startX = 0;
-    let scrollLeft = 0;
-    let initialMargin = "";
-    let lastTouchTime = 0;
-    let lastClickTime = 0;
-    let startY = 0; // Track vertical touch position
-    let isScrollingHorizontally = false;
+    let isDragging = false,
+      startX = 0,
+      scrollLeft = 0,
+      startY = 0,
+      isScrollingHorizontally = false,
+      lastTouchTime = 0,
+      lastClickTime = 0;
 
-    // Check if we're on mobile/tablet
     const isMobileOrTablet = window.innerWidth < 992;
 
+    // Accessibility
     slider.setAttribute("role", "region");
     slider.setAttribute("aria-label", "Project images carousel");
 
-    if (window.innerWidth >= 1440) {
-      initialMargin = window.getComputedStyle(slider).marginLeft;
-    }
-
-    // Modified touch event handlers to allow vertical scrolling
+    // Touch Events
     slider.addEventListener(
       "touchstart",
       (e) => {
         isDragging = true;
         startX = e.touches[0].pageX - slider.offsetLeft;
-        startY = e.touches[0].pageY; // Track vertical position
+        startY = e.touches[0].pageY;
         scrollLeft = slider.scrollLeft;
         slider.style.scrollBehavior = "auto";
         lastTouchTime = Date.now();
-        isScrollingHorizontally = false; // Reset direction detection
+        isScrollingHorizontally = false;
       },
       { passive: true }
     );
@@ -70,20 +383,13 @@ document.addEventListener("DOMContentLoaded", () => {
       isDragging = false;
       slider.style.scrollBehavior = "smooth";
 
-      // Only snap to grid on desktop, not on mobile/tablet
       if (!isMobileOrTablet) {
         const scrollAmount = getScrollAmount();
         const remainder = slider.scrollLeft % scrollAmount;
-
-        if (remainder > scrollAmount / 2) {
-          slider.scrollLeft += scrollAmount - remainder;
-        } else {
-          slider.scrollLeft -= remainder;
-        }
+        slider.scrollLeft +=
+          remainder > scrollAmount / 2 ? scrollAmount - remainder : -remainder;
       }
     });
-
-    let lastMoveTime = 0;
 
     slider.addEventListener(
       "touchmove",
@@ -92,14 +398,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const x = e.touches[0].pageX - slider.offsetLeft;
         const y = e.touches[0].pageY;
-        const walkX = x - startX;
+        const walkX = (x - startX) * 1.5;
         const walkY = y - startY;
 
-        const now = Date.now();
-        if (now - lastMoveTime < 10) return; // Limit FPS
-        lastMoveTime = now;
-
-        // Determine scroll direction if not already determined
         if (
           !isScrollingHorizontally &&
           Math.abs(walkX) > Math.abs(walkY) &&
@@ -108,53 +409,43 @@ document.addEventListener("DOMContentLoaded", () => {
           isScrollingHorizontally = true;
         }
 
-        // Only handle horizontal scrolling and prevent default if we're scrolling horizontally
         if (isScrollingHorizontally) {
-          e.preventDefault(); // Only prevent default for horizontal scrolling
+          e.preventDefault();
           slider.scrollLeft = scrollLeft - walkX;
         }
-        // Otherwise, let the default vertical scrolling happen
       },
       { passive: false }
     );
 
+    // Click-to-scroll on desktop
     slider.addEventListener("click", (e) => {
-      if (isDragging || Date.now() - lastTouchTime < 300) {
+      if (
+        isDragging ||
+        Date.now() - lastTouchTime < 300 ||
+        Date.now() - lastClickTime < 300
+      )
         return;
-      }
-
-      if (Date.now() - lastClickTime < 300) {
-        return;
-      }
       lastClickTime = Date.now();
 
-      // Only implement click-to-scroll on desktop
       if (!isMobileOrTablet) {
         const clickX = e.clientX - slider.getBoundingClientRect().left;
-        const sliderCenterX = slider.offsetWidth / 2;
+        const centerX = slider.offsetWidth / 2;
         const scrollAmount = getScrollAmount();
 
-        if (clickX < sliderCenterX) {
-          slider.scrollBy({
-            left: -scrollAmount,
-            behavior: "smooth",
-          });
-        } else {
-          slider.scrollBy({
-            left: scrollAmount,
-            behavior: "smooth",
-          });
-        }
+        slider.scrollBy({
+          left: clickX < centerX ? -scrollAmount : scrollAmount,
+          behavior: "smooth",
+        });
       }
     });
 
-    // Mouse event handlers
+    // Mouse Drag
     slider.addEventListener("mousedown", (e) => {
       isDragging = true;
       startX = e.pageX - slider.offsetLeft;
       scrollLeft = slider.scrollLeft;
       slider.style.scrollBehavior = "auto";
-      // slider.style.cursor = "grabbing";
+      slider.style.cursor = "grabbing";
       e.preventDefault();
     });
 
@@ -162,25 +453,20 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isDragging) {
         isDragging = false;
         slider.style.scrollBehavior = "smooth";
-        // slider.style.cursor = "grab";
+        slider.style.cursor = "grab";
       }
     });
 
     slider.addEventListener("mouseup", () => {
       isDragging = false;
       slider.style.scrollBehavior = "smooth";
-      // slider.style.cursor = "grab";
+      slider.style.cursor = "grab";
 
-      // Only snap to grid on desktop
       if (!isMobileOrTablet) {
         const scrollAmount = getScrollAmount();
         const remainder = slider.scrollLeft % scrollAmount;
-
-        if (remainder > scrollAmount / 2) {
-          slider.scrollLeft += scrollAmount - remainder;
-        } else {
-          slider.scrollLeft -= remainder;
-        }
+        slider.scrollLeft +=
+          remainder > scrollAmount / 2 ? scrollAmount - remainder : -remainder;
       }
     });
 
@@ -188,138 +474,112 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!isDragging) return;
       e.preventDefault();
       const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 2;
-      slider.scrollLeft = scrollLeft - walk;
+      slider.scrollLeft = scrollLeft - (x - startX) * 1.5;
     });
 
+    // Keyboard Nav
     slider.tabIndex = 0;
     slider.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowLeft") {
-        // On mobile/tablet, scroll less for a more natural feel
-        const scrollAmount = isMobileOrTablet ? 100 : getScrollAmount();
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        const amount = isMobileOrTablet ? 100 : getScrollAmount();
         slider.scrollBy({
-          left: -scrollAmount,
-          behavior: "smooth",
-        });
-        e.preventDefault();
-      } else if (e.key === "ArrowRight") {
-        const scrollAmount = isMobileOrTablet ? 100 : getScrollAmount();
-        slider.scrollBy({
-          left: scrollAmount,
+          left: e.key === "ArrowLeft" ? -amount : amount,
           behavior: "smooth",
         });
         e.preventDefault();
       }
     });
 
-    function updateMargins() {
-      let sliderMargin;
-
-      if (window.innerWidth >= 1440) {
-        sliderMargin = (window.innerWidth - 1440) / 2;
-      } else if (window.innerWidth >= 992) {
-        sliderMargin = 15;
-      } else if (window.innerWidth >= 768) {
-        sliderMargin = 10;
-      } else {
-        sliderMargin = 15;
-      }
-
-      slider.style.marginLeft = `${sliderMargin}px`;
+    // Margin Adjustments
+    const updateMargins = () => {
+      const w = window.innerWidth;
+      const margin =
+        w >= 1440 ? (w - 1440) / 2 : w >= 992 ? 15 : w >= 768 ? 10 : 15;
+      slider.style.marginLeft = `${margin}px`;
 
       const project = slider.closest(".project");
       if (project) {
         const info = project.querySelector(".project-info");
         const widgets = project.querySelector(".widgets-container");
 
-        if (info) {
-          info.style.setProperty("--info-margin", `${sliderMargin}px`);
-        }
-
-        if (widgets) {
-          widgets.style.setProperty("--widgets-margin", `${sliderMargin}px`);
-        }
+        if (info) info.style.setProperty("--info-margin", `${margin}px`);
+        if (widgets)
+          widgets.style.setProperty("--widgets-margin", `${margin}px`);
       }
-    }
-
+    };
     updateMargins();
-
-    const cards = slider.querySelectorAll(".project-card");
-    cards.forEach((card) => {
-      // Only apply scroll-snap-align on desktop
-      if (isMobileOrTablet) {
-        card.style.scrollSnapAlign = "start";
-      }
-    });
-
     window.addEventListener("resize", updateMargins);
 
-    // Add observer to reset slider position when not in focus
+    // Snap Behavior
+    slider.querySelectorAll(".project-card").forEach((card) => {
+      card.style.scrollSnapAlign = isMobileOrTablet ? "none" : "start";
+    });
+
+    // Auto-reset scroll when out of view
     const project = slider.closest(".project");
     if (project) {
-      const resetObserver = new IntersectionObserver(
+      const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            // When project goes out of view, reset slider to first position
             if (!entry.isIntersecting) {
               setTimeout(() => {
-                slider.scrollTo({
-                  left: 0,
-                  behavior: "auto",
-                });
+                slider.scrollTo({ left: 0, behavior: "auto" });
               }, 300);
             }
           });
         },
         { threshold: 0.1 }
       );
-
-      resetObserver.observe(project);
+      observer.observe(project);
     }
   });
 
-  // ===== Navbar Enhancement =====
+  // ===== Navbar Fixation =====
   const navbar = document.querySelector(".navbar");
-
   if (navbar) {
-    // Keep navbar fixed at the top at all times
-    navbar.style.transform = "translateX(-50%)";
-    navbar.style.position = "fixed";
-    navbar.style.top = "20px";
-    navbar.style.left = "50%";
-    navbar.style.zIndex = "1000";
+    Object.assign(navbar.style, {
+      transform: "translateX(-50%)",
+      position: "fixed",
+      top: "20px",
+      left: "50%",
+      zIndex: "1000",
+    });
   }
 });
-document.addEventListener("DOMContentLoaded", () => {
-  const aboutSection = document.querySelector(".about-section");
-  const servicesInfo = document.querySelector(".services-info");
-  const teamInfo = document.querySelector(".team-info");
 
-  function handleScroll() {
-    if (window.innerWidth >= 1440) {
-      const aboutSectionTop = aboutSection.getBoundingClientRect().top;
+// ===== Section Scroll Behavior =====
+const aboutSection = document.querySelector(".about-section");
+const servicesInfo = document.querySelector(".services-info");
+const teamInfo = document.querySelector(".team-info");
 
-      if (aboutSectionTop <= 0) {
-        servicesInfo.style.position = "fixed";
-        servicesInfo.style.top = "0";
-        servicesInfo.style.width = "auto";
-        teamInfo.style.width = "100%";
-      } else {
-        servicesInfo.style.position = "relative";
-        servicesInfo.style.top = "auto";
-        servicesInfo.style.width = "auto";
-        teamInfo.style.width = "453px";
-      }
-    } else {
-      servicesInfo.style.position = "static";
-      servicesInfo.style.top = "auto";
-      servicesInfo.style.width = "auto";
+function handleScroll() {
+  if (window.innerWidth >= 768) {
+    const aboutTop = aboutSection.getBoundingClientRect().top;
+    if (aboutTop <= 0) {
+      Object.assign(servicesInfo.style, {
+        position: "fixed",
+        top: "0",
+        width: "auto",
+      });
       teamInfo.style.width = "100%";
+    } else {
+      Object.assign(servicesInfo.style, {
+        position: "relative",
+        top: "auto",
+        width: "auto",
+      });
+      teamInfo.style.width = "453px";
     }
+  } else {
+    Object.assign(servicesInfo.style, {
+      position: "static",
+      top: "auto",
+      width: "auto",
+    });
+    teamInfo.style.width = "100%";
   }
-
-  window.addEventListener("scroll", handleScroll);
-});
+}
+window.addEventListener("scroll", handleScroll);
 
 // Cursor
 const cursor = document.querySelector(".custom-cursor");
