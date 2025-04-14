@@ -582,66 +582,66 @@ function handleScroll() {
 window.addEventListener("scroll", handleScroll);
 
 // Cursor
-const cursor = document.querySelector(".custom-cursor");
-const sliders = document.querySelectorAll(".projects-slider");
+// const cursor = document.querySelector(".custom-cursor");
+// const sliders = document.querySelectorAll(".projects-slider");
 
-// Move the cursor with mouse
-document.addEventListener("mousemove", (e) => {
-  cursor.style.left = e.clientX + "px";
-  cursor.style.top = e.clientY + "px";
-});
+// // Move the cursor with mouse
+// document.addEventListener("mousemove", (e) => {
+//   cursor.style.left = e.clientX + "px";
+//   cursor.style.top = e.clientY + "px";
+// });
 
-// Add event listeners to each slider
-sliders.forEach((slider) => {
-  // Handle hover state
-  slider.addEventListener("mouseenter", () => {
-    cursor.classList.add("slider-hover");
-  });
+// // Add event listeners to each slider
+// sliders.forEach((slider) => {
+//   // Handle hover state
+//   slider.addEventListener("mouseenter", () => {
+//     cursor.classList.add("slider-hover");
+//   });
 
-  slider.addEventListener("mouseleave", () => {
-    cursor.classList.remove("slider-hover");
-    cursor.classList.remove("arrow-active"); // Remove arrow active state
-    cursor.textContent = ""; // Remove arrow when exiting
-  });
+//   slider.addEventListener("mouseleave", () => {
+//     cursor.classList.remove("slider-hover");
+//     cursor.classList.remove("arrow-active"); // Remove arrow active state
+//     cursor.textContent = ""; // Remove arrow when exiting
+//   });
 
-  // Handle direction arrows
-  slider.addEventListener("mousemove", (e) => {
-    const rect = slider.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
+//   // Handle direction arrows
+//   slider.addEventListener("mousemove", (e) => {
+//     const rect = slider.getBoundingClientRect();
+//     const centerX = rect.left + rect.width / 2;
 
-    // Check if we can scroll in the direction
-    const canScrollLeft = slider.scrollLeft > 0;
-    const canScrollRight =
-      slider.scrollLeft + slider.clientWidth < slider.scrollWidth - 1; // -1 for rounding errors
+//     // Check if we can scroll in the direction
+//     const canScrollLeft = slider.scrollLeft > 0;
+//     const canScrollRight =
+//       slider.scrollLeft + slider.clientWidth < slider.scrollWidth - 1; // -1 for rounding errors
 
-    if (e.clientX < centerX) {
-      // Left side
-      if (canScrollLeft) {
-        cursor.textContent = "←";
-        cursor.classList.add("arrow-active"); // Add class for larger cursor with arrow
-      } else {
-        cursor.textContent = ""; // No arrow if can't scroll left
-        cursor.classList.remove("arrow-active"); // Remove class to get small default cursor
-      }
-    } else {
-      // Right side
-      if (canScrollRight) {
-        cursor.textContent = "→";
-        cursor.classList.add("arrow-active"); // Add class for larger cursor with arrow
-      } else {
-        cursor.textContent = ""; // No arrow if can't scroll right
-        cursor.classList.remove("arrow-active"); // Remove class to get small default cursor
-      }
-    }
-  });
+//     if (e.clientX < centerX) {
+//       // Left side
+//       if (canScrollLeft) {
+//         cursor.textContent = "←";
+//         cursor.classList.add("arrow-active"); // Add class for larger cursor with arrow
+//       } else {
+//         cursor.textContent = ""; // No arrow if can't scroll left
+//         cursor.classList.remove("arrow-active"); // Remove class to get small default cursor
+//       }
+//     } else {
+//       // Right side
+//       if (canScrollRight) {
+//         cursor.textContent = "→";
+//         cursor.classList.add("arrow-active"); // Add class for larger cursor with arrow
+//       } else {
+//         cursor.textContent = ""; // No arrow if can't scroll right
+//         cursor.classList.remove("arrow-active"); // Remove class to get small default cursor
+//       }
+//     }
+//   });
 
-  // Update cursor when scrolling to handle edge cases
-  slider.addEventListener("scroll", () => {
-    // Force update the cursor by triggering a mousemove event
-    const mouseEvent = new MouseEvent("mousemove", {
-      clientX: parseInt(cursor.style.left),
-      clientY: parseInt(cursor.style.top),
-    });
-    slider.dispatchEvent(mouseEvent);
-  });
-});
+//   // Update cursor when scrolling to handle edge cases
+//   slider.addEventListener("scroll", () => {
+//     // Force update the cursor by triggering a mousemove event
+//     const mouseEvent = new MouseEvent("mousemove", {
+//       clientX: parseInt(cursor.style.left),
+//       clientY: parseInt(cursor.style.top),
+//     });
+//     slider.dispatchEvent(mouseEvent);
+//   });
+// });
