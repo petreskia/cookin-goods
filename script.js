@@ -391,6 +391,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    slider.style.willChange = "scroll-position"; // Hint browser to optimize
+
+    let rafPending = false;
+
     slider.addEventListener(
       "touchmove",
       (e) => {
@@ -398,9 +402,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const x = e.touches[0].pageX - slider.offsetLeft;
         const y = e.touches[0].pageY;
-        const walkX = (x - startX) * 2;
+        const walkX = x - startX;
         const walkY = y - startY;
 
+        // Determine scroll intent
         if (
           !isScrollingHorizontally &&
           Math.abs(walkX) > Math.abs(walkY) &&
@@ -410,8 +415,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (isScrollingHorizontally) {
-          e.preventDefault();
-          slider.scrollLeft = scrollLeft - walkX;
+          e.preventDefault(); // Prevent vertical scroll
+          if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(() => {
+              slider.scrollLeft = scrollLeft - walkX;
+              rafPending = false;
+            });
+          }
         }
       },
       { passive: false }

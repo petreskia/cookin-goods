@@ -138,7 +138,8 @@ img {
   margin-left: 0; /* Reset margin on smaller screens */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
   /* cursor: grab;  */
-  will-change: transform; /* Optimize for animations */
+  will-change: scroll-position;
+  scroll-behavior: smooth;
 }
 
 /* .projects-slider:active {
