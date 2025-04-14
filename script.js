@@ -398,7 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const x = e.touches[0].pageX - slider.offsetLeft;
         const y = e.touches[0].pageY;
-        const walkX = (x - startX) * 3;
+        const walkX = (x - startX) * 2;
         const walkY = y - startY;
 
         if (
@@ -474,7 +474,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!isDragging) return;
       e.preventDefault();
       const x = e.pageX - slider.offsetLeft;
-      slider.scrollLeft = scrollLeft - (x - startX) * 3;
+      slider.scrollLeft = scrollLeft - (x - startX) * 2;
     });
 
     // Keyboard Nav
