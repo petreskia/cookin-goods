@@ -402,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const x = e.touches[0].pageX - slider.offsetLeft;
         const y = e.touches[0].pageY;
-        const walkX = x - startX;
+        const walkX = (x - startX) * 2.5;
         const walkY = y - startY;
 
         // Determine scroll intent
