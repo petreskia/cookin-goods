@@ -83,6 +83,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    let lastMoveTime = 0;
+
     slider.addEventListener(
       "touchmove",
       (e) => {
@@ -90,8 +92,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const x = e.touches[0].pageX - slider.offsetLeft;
         const y = e.touches[0].pageY;
-        const walkX = (x - startX) * 2;
+        const walkX = x - startX;
         const walkY = y - startY;
+
+        const now = Date.now();
+        if (now - lastMoveTime < 10) return; // Limit FPS
+        lastMoveTime = now;
 
         // Determine scroll direction if not already determined
         if (
@@ -242,8 +248,6 @@ document.addEventListener("DOMContentLoaded", () => {
     cards.forEach((card) => {
       // Only apply scroll-snap-align on desktop
       if (isMobileOrTablet) {
-        card.style.scrollSnapAlign = "none";
-      } else {
         card.style.scrollSnapAlign = "start";
       }
     });
