@@ -283,18 +283,19 @@ img {
 }
 
 .card-content h3 {
-  font-size: 18px;
+  font-size: 22px;
 }
 
 .card-content p {
   font-size: 16px;
   line-height: 1.3;
   width: 90%;
+  color: #c4c4c3;
 }
 
 .card-content a {
   text-decoration: underline;
-  font-size: 14px;
+  font-size: 22px;
 }
 
 .fixed-card {
@@ -307,6 +308,9 @@ img {
   height: 100%;
   object-fit: cover;
   border-radius: 5px;
+}
+.mt-5 {
+  margin-top: 25px;
 }
 
 /* Right Section - Services Info */
@@ -754,7 +758,7 @@ img {
   }
 
   .project-info {
-    width: 100%;
+    width: 95%;
     font-size: 18px;
   }
 
