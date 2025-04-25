@@ -1,326 +1,3 @@
-// document.addEventListener("DOMContentLoaded", () => {
-//   // ===== Performance Utilities =====
-//   function debounce(func, wait = 20, immediate = true) {
-//     let timeout;
-//     return function () {
-//       const context = this,
-//         args = arguments;
-//       const later = function () {
-//         timeout = null;
-//         if (!immediate) func.apply(context, args);
-//       };
-//       const callNow = immediate && !timeout;
-//       clearTimeout(timeout);
-//       timeout = setTimeout(later, wait);
-//       if (callNow) func.apply(context, args);
-//     };
-//   }
-
-//   // ===== Project Sliders Enhancement =====
-//   const sliders = document.querySelectorAll(".projects-slider");
-
-//   function getScrollAmount() {
-//     if (window.innerWidth <= 576) {
-//       return 277; // Width of project-img on mobile
-//     } else if (window.innerWidth <= 768) {
-//       return 350;
-//     } else if (window.innerWidth <= 992) {
-//       return 400;
-//     } else {
-//       return 453;
-//     }
-//   }
-
-//   sliders.forEach((slider) => {
-//     let isDragging = false;
-//     let startX = 0;
-//     let scrollLeft = 0;
-//     let initialMargin = "";
-//     let lastTouchTime = 0;
-//     let lastClickTime = 0;
-//     let startY = 0; // Track vertical touch position
-//     let isScrollingHorizontally = false;
-
-//     // Check if we're on mobile/tablet
-//     const isMobileOrTablet = window.innerWidth < 992;
-
-//     slider.setAttribute("role", "region");
-//     slider.setAttribute("aria-label", "Project images carousel");
-
-//     if (window.innerWidth >= 1440) {
-//       initialMargin = window.getComputedStyle(slider).marginLeft;
-//     }
-
-//     // Modified touch event handlers to allow vertical scrolling
-//     slider.addEventListener(
-//       "touchstart",
-//       (e) => {
-//         isDragging = true;
-//         startX = e.touches[0].pageX - slider.offsetLeft;
-//         startY = e.touches[0].pageY; // Track vertical position
-//         scrollLeft = slider.scrollLeft;
-//         slider.style.scrollBehavior = "auto";
-//         lastTouchTime = Date.now();
-//         isScrollingHorizontally = false; // Reset direction detection
-//       },
-//       { passive: true }
-//     );
-
-//     slider.addEventListener("touchend", () => {
-//       isDragging = false;
-//       slider.style.scrollBehavior = "smooth";
-
-//       // Only snap to grid on desktop, not on mobile/tablet
-//       if (!isMobileOrTablet) {
-//         const scrollAmount = getScrollAmount();
-//         const remainder = slider.scrollLeft % scrollAmount;
-
-//         if (remainder > scrollAmount / 2) {
-//           slider.scrollLeft += scrollAmount - remainder;
-//         } else {
-//           slider.scrollLeft -= remainder;
-//         }
-//       }
-//     });
-
-//     let lastMoveTime = 0;
-
-//     slider.addEventListener(
-//       "touchmove",
-//       (e) => {
-//         if (!isDragging) return;
-
-//         const x = e.touches[0].pageX - slider.offsetLeft;
-//         const y = e.touches[0].pageY;
-//         const walkX = x - startX;
-//         const walkY = y - startY;
-
-//         const now = Date.now();
-//         if (now - lastMoveTime < 10) return; // Limit FPS
-//         lastMoveTime = now;
-
-//         // Determine scroll direction if not already determined
-//         if (
-//           !isScrollingHorizontally &&
-//           Math.abs(walkX) > Math.abs(walkY) &&
-//           Math.abs(walkX) > 10
-//         ) {
-//           isScrollingHorizontally = true;
-//         }
-
-//         // Only handle horizontal scrolling and prevent default if we're scrolling horizontally
-//         if (isScrollingHorizontally) {
-//           e.preventDefault(); // Only prevent default for horizontal scrolling
-//           slider.scrollLeft = scrollLeft - walkX;
-//         }
-//         // Otherwise, let the default vertical scrolling happen
-//       },
-//       { passive: false }
-//     );
-
-//     slider.addEventListener("click", (e) => {
-//       if (isDragging || Date.now() - lastTouchTime < 300) {
-//         return;
-//       }
-
-//       if (Date.now() - lastClickTime < 300) {
-//         return;
-//       }
-//       lastClickTime = Date.now();
-
-//       // Only implement click-to-scroll on desktop
-//       if (!isMobileOrTablet) {
-//         const clickX = e.clientX - slider.getBoundingClientRect().left;
-//         const sliderCenterX = slider.offsetWidth / 2;
-//         const scrollAmount = getScrollAmount();
-
-//         if (clickX < sliderCenterX) {
-//           slider.scrollBy({
-//             left: -scrollAmount,
-//             behavior: "smooth",
-//           });
-//         } else {
-//           slider.scrollBy({
-//             left: scrollAmount,
-//             behavior: "smooth",
-//           });
-//         }
-//       }
-//     });
-
-//     // Mouse event handlers
-//     slider.addEventListener("mousedown", (e) => {
-//       isDragging = true;
-//       startX = e.pageX - slider.offsetLeft;
-//       scrollLeft = slider.scrollLeft;
-//       slider.style.scrollBehavior = "auto";
-//       // slider.style.cursor = "grabbing";
-//       e.preventDefault();
-//     });
-
-//     slider.addEventListener("mouseleave", () => {
-//       if (isDragging) {
-//         isDragging = false;
-//         slider.style.scrollBehavior = "smooth";
-//         // slider.style.cursor = "grab";
-//       }
-//     });
-
-//     slider.addEventListener("mouseup", () => {
-//       isDragging = false;
-//       slider.style.scrollBehavior = "smooth";
-//       // slider.style.cursor = "grab";
-
-//       // Only snap to grid on desktop
-//       if (!isMobileOrTablet) {
-//         const scrollAmount = getScrollAmount();
-//         const remainder = slider.scrollLeft % scrollAmount;
-
-//         if (remainder > scrollAmount / 2) {
-//           slider.scrollLeft += scrollAmount - remainder;
-//         } else {
-//           slider.scrollLeft -= remainder;
-//         }
-//       }
-//     });
-
-//     slider.addEventListener("mousemove", (e) => {
-//       if (!isDragging) return;
-//       e.preventDefault();
-//       const x = e.pageX - slider.offsetLeft;
-//       const walk = (x - startX) * 2;
-//       slider.scrollLeft = scrollLeft - walk;
-//     });
-
-//     slider.tabIndex = 0;
-//     slider.addEventListener("keydown", (e) => {
-//       if (e.key === "ArrowLeft") {
-//         // On mobile/tablet, scroll less for a more natural feel
-//         const scrollAmount = isMobileOrTablet ? 100 : getScrollAmount();
-//         slider.scrollBy({
-//           left: -scrollAmount,
-//           behavior: "smooth",
-//         });
-//         e.preventDefault();
-//       } else if (e.key === "ArrowRight") {
-//         const scrollAmount = isMobileOrTablet ? 100 : getScrollAmount();
-//         slider.scrollBy({
-//           left: scrollAmount,
-//           behavior: "smooth",
-//         });
-//         e.preventDefault();
-//       }
-//     });
-
-//     function updateMargins() {
-//       let sliderMargin;
-
-//       if (window.innerWidth >= 1440) {
-//         sliderMargin = (window.innerWidth - 1440) / 2;
-//       } else if (window.innerWidth >= 992) {
-//         sliderMargin = 15;
-//       } else if (window.innerWidth >= 768) {
-//         sliderMargin = 10;
-//       } else {
-//         sliderMargin = 15;
-//       }
-
-//       slider.style.marginLeft = `${sliderMargin}px`;
-
-//       const project = slider.closest(".project");
-//       if (project) {
-//         const info = project.querySelector(".project-info");
-//         const widgets = project.querySelector(".widgets-container");
-
-//         if (info) {
-//           info.style.setProperty("--info-margin", `${sliderMargin}px`);
-//         }
-
-//         if (widgets) {
-//           widgets.style.setProperty("--widgets-margin", `${sliderMargin}px`);
-//         }
-//       }
-//     }
-
-//     updateMargins();
-
-//     const cards = slider.querySelectorAll(".project-card");
-//     cards.forEach((card) => {
-//       // Only apply scroll-snap-align on desktop
-//       if (isMobileOrTablet) {
-//         card.style.scrollSnapAlign = "start";
-//       }
-//     });
-
-//     window.addEventListener("resize", updateMargins);
-
-//     // Add observer to reset slider position when not in focus
-//     const project = slider.closest(".project");
-//     if (project) {
-//       const resetObserver = new IntersectionObserver(
-//         (entries) => {
-//           entries.forEach((entry) => {
-//             // When project goes out of view, reset slider to first position
-//             if (!entry.isIntersecting) {
-//               setTimeout(() => {
-//                 slider.scrollTo({
-//                   left: 0,
-//                   behavior: "auto",
-//                 });
-//               }, 300);
-//             }
-//           });
-//         },
-//         { threshold: 0.1 }
-//       );
-
-//       resetObserver.observe(project);
-//     }
-//   });
-
-//   // ===== Navbar Enhancement =====
-//   const navbar = document.querySelector(".navbar");
-
-//   if (navbar) {
-//     // Keep navbar fixed at the top at all times
-//     navbar.style.transform = "translateX(-50%)";
-//     navbar.style.position = "fixed";
-//     navbar.style.top = "20px";
-//     navbar.style.left = "50%";
-//     navbar.style.zIndex = "1000";
-//   }
-// });
-// document.addEventListener("DOMContentLoaded", () => {
-//   const aboutSection = document.querySelector(".about-section");
-//   const servicesInfo = document.querySelector(".services-info");
-//   const teamInfo = document.querySelector(".team-info");
-
-//   function handleScroll() {
-//     if (window.innerWidth >= 1440) {
-//       const aboutSectionTop = aboutSection.getBoundingClientRect().top;
-
-//       if (aboutSectionTop <= 0) {
-//         servicesInfo.style.position = "fixed";
-//         servicesInfo.style.top = "0";
-//         servicesInfo.style.width = "auto";
-//         teamInfo.style.width = "100%";
-//       } else {
-//         servicesInfo.style.position = "relative";
-//         servicesInfo.style.top = "auto";
-//         servicesInfo.style.width = "auto";
-//         teamInfo.style.width = "453px";
-//       }
-//     } else {
-//       servicesInfo.style.position = "static";
-//       servicesInfo.style.top = "auto";
-//       servicesInfo.style.width = "auto";
-//       teamInfo.style.width = "100%";
-//     }
-//   }
-
-//   window.addEventListener("scroll", handleScroll);
-// });
-
 document.addEventListener("DOMContentLoaded", () => {
   // ===== Performance Utilities =====
   const debounce = (func, wait = 20, immediate = true) => {
@@ -505,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const updateMargins = () => {
       const w = window.innerWidth;
       const margin =
-        w >= 1440 ? (w - 1440) / 2 : w >= 992 ? 15 : w >= 768 ? 10 : 15;
+        w >= 1440 ? (w - 1440) / 2 : w >= 992 ? 10 : w >= 768 ? 10 : 10;
       slider.style.marginLeft = `${margin}px`;
 
       const project = slider.closest(".project");
@@ -557,40 +234,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
-// ===== Section Scroll Behavior =====
-const aboutSection = document.querySelector(".about-section");
-const servicesInfo = document.querySelector(".services-info");
-const teamInfo = document.querySelector(".team-info");
-
-function handleScroll() {
-  if (window.innerWidth >= 768) {
-    const aboutTop = aboutSection.getBoundingClientRect().top;
-    if (aboutTop <= 0) {
-      Object.assign(servicesInfo.style, {
-        position: "fixed",
-        top: "0",
-        width: "auto",
-      });
-      teamInfo.style.width = "100%";
-    } else {
-      Object.assign(servicesInfo.style, {
-        position: "relative",
-        top: "auto",
-        width: "auto",
-      });
-      teamInfo.style.width = "453px";
-    }
-  } else {
-    Object.assign(servicesInfo.style, {
-      position: "static",
-      top: "auto",
-      width: "auto",
-    });
-    teamInfo.style.width = "100%";
-  }
-}
-window.addEventListener("scroll", handleScroll);
 
 // Cursor
 if (window.innerWidth >= 992) {
@@ -653,3 +296,201 @@ if (window.innerWidth >= 992) {
     });
   });
 }
+
+// Carousel
+document.addEventListener("DOMContentLoaded", () => {
+  const buttons = document.querySelectorAll(".slider-btn");
+  const contentItems = document.querySelectorAll(".content-item");
+
+  // Function to set active content
+  function setActiveContent(category) {
+    // Remove active class from all buttons and content items
+    buttons.forEach((btn) => btn.classList.remove("active"));
+    contentItems.forEach((item) => item.classList.remove("active"));
+
+    // Add active class to selected button
+    const activeButton = document.querySelector(
+      `.slider-btn[data-category="${category}"]`
+    );
+    if (activeButton) {
+      activeButton.classList.add("active");
+    }
+
+    // Add active class to corresponding content item
+    const activeContent = document.getElementById(category);
+    if (activeContent) {
+      activeContent.classList.add("active");
+    }
+  }
+
+  // Add click event listeners to all buttons
+  buttons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const category = this.getAttribute("data-category");
+      setActiveContent(category);
+    });
+  });
+
+  // Auto-rotate through slides every 5 seconds
+  let currentIndex = 0;
+  const categories = Array.from(buttons).map((btn) =>
+    btn.getAttribute("data-category")
+  );
+
+  function autoRotate() {
+    currentIndex = (currentIndex + 1) % categories.length;
+    setActiveContent(categories[currentIndex]);
+  }
+
+  // Start auto-rotation
+  const intervalId = setInterval(autoRotate, 5000);
+
+  // Stop auto-rotation when user interacts with buttons
+  buttons.forEach((button) => {
+    button.addEventListener("click", function () {
+      clearInterval(intervalId);
+      // Update current index based on clicked button
+      currentIndex = categories.indexOf(this.getAttribute("data-category"));
+    });
+  });
+});
+
+const sliderSection = document.querySelector(".slider-section");
+const images = document.querySelectorAll(".images-slider > div");
+const textOptions = document.querySelectorAll(".text-slider > div");
+
+function activateSlide(index) {
+  // Update images - show only the selected one
+  images.forEach((imgDiv, i) => {
+    imgDiv.classList.toggle("active", i === index);
+    imgDiv.classList.toggle("hidden", i !== index);
+  });
+
+  // Update text options - make only the selected one active
+  textOptions.forEach((textDiv, i) => {
+    const h3 = textDiv.querySelector("h3");
+    const p = textDiv.querySelector("p");
+
+    if (i === index) {
+      h3.classList.add("activ-text");
+      p.classList.add("activ-text");
+    } else {
+      h3.classList.remove("activ-text");
+      p.classList.remove("activ-text");
+    }
+  });
+}
+
+// Add click event listeners to each text option
+textOptions.forEach((textOption, index) => {
+  textOption.addEventListener("click", () => {
+    activateSlide(index);
+  });
+
+  // Make text options appear clickable
+  textOption.style.cursor = "pointer";
+});
+
+// Intersection observer to detect when slider-section is in view
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        activateSlide(0); // Activate first slide when section comes into view
+      }
+    });
+  },
+  {
+    threshold: 0.4, // Trigger when 40% is visible
+  }
+);
+
+observer.observe(sliderSection);
+
+// Initialize the first slide as active
+activateSlide(0);
+
+// Add this to your existing JavaScript to create progress indicators
+document.addEventListener("DOMContentLoaded", () => {
+  // Create progress indicators
+  const textOptions = document.querySelectorAll(".text-slider > div");
+  const sliderSection = document.querySelector(".slider-section");
+
+  // Create progress container if it doesn't exist
+  if (!document.querySelector(".slider-progress")) {
+    const progressContainer = document.createElement("div");
+    progressContainer.className = "slider-progress";
+
+    // Create a dot for each slide
+    textOptions.forEach((_, index) => {
+      const dot = document.createElement("div");
+      dot.className = "slider-progress-dot";
+      if (index === 0) dot.classList.add("active");
+
+      // Add click event to each dot
+      dot.addEventListener("click", () => {
+        activateSlide(index);
+      });
+
+      progressContainer.appendChild(dot);
+    });
+
+    sliderSection.appendChild(progressContainer);
+  }
+
+  // Update the original activateSlide function to also update progress dots
+  const originalActivateSlide = window.activateSlide;
+
+  window.activateSlide = (index) => {
+    // Call the original function
+    originalActivateSlide(index);
+
+    // Update progress dots
+    const dots = document.querySelectorAll(".slider-progress-dot");
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("active", i === index);
+    });
+  };
+
+  // Add keyboard navigation
+  document.addEventListener("keydown", (e) => {
+    if (!document.querySelector(".slider-section:hover")) return;
+
+    const activeIndex = Array.from(textOptions).findIndex((div) =>
+      div.querySelector("h3.activ-text")
+    );
+
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      const nextIndex = (activeIndex + 1) % textOptions.length;
+      activateSlide(nextIndex);
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      const prevIndex =
+        (activeIndex - 1 + textOptions.length) % textOptions.length;
+      activateSlide(prevIndex);
+    }
+  });
+
+  // Make text options keyboard focusable
+  textOptions.forEach((option) => {
+    option.setAttribute("tabindex", "0");
+    option.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const index = Array.from(textOptions).indexOf(option);
+        activateSlide(index);
+      }
+    });
+  });
+
+  // Show progress dots on mobile
+  const mediaQuery = window.matchMedia("(max-width: 767px)");
+  function handleScreenChange(e) {
+    const progressContainer = document.querySelector(".slider-progress");
+    if (progressContainer) {
+      progressContainer.style.display = e.matches ? "flex" : "none";
+    }
+  }
+
+  mediaQuery.addEventListener("change", handleScreenChange);
+  handleScreenChange(mediaQuery);
+});
