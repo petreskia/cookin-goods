@@ -779,7 +779,7 @@ img {
   width: 100%;
   position: relative;
   aspect-ratio: 3 / 4; /* Portrait aspect ratio */
-  height: 350px; /* Fixed height as requested */
+  height: 450px; /* Fixed height as requested */
   overflow: hidden;
   border-radius: 5px;
 }
