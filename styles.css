@@ -844,8 +844,9 @@ img {
   opacity: 0.2;
   transition: all 0.3s ease;
 }
-.text-slider div span {
+.text-slider span {
   display: none;
+  font-size: 12px;
 }
 .text-slider div p {
   display: block;
@@ -953,6 +954,9 @@ img {
   .text-slider p {
     font-size: 16px;
   }
+  .text-slider span {
+    font-size: 14px;
+  }
 
   .slider-progress {
     position: absolute;
@@ -993,6 +997,9 @@ img {
 
   .text-slider p {
     font-size: 18px;
+  }
+  .text-slider span {
+    font-size: 16px;
   }
 }
 
