@@ -27,6 +27,7 @@ html {
   scroll-behavior: smooth; /* Enable smooth scrolling */
   max-width: 100%;
   overflow-x: hidden;
+  cursor: none !important;
 }
 
 h1,
