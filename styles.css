@@ -837,7 +837,6 @@ img {
 
 .text-slider h3 {
   font-size: 18px;
-  font-weight: 300;
   margin-bottom: 4px;
   color: #fdfdfc;
   opacity: 0.4;
@@ -846,7 +845,6 @@ img {
 
 .text-slider p {
   font-size: 14px;
-  font-weight: 300;
   color: #fdfdfc;
   opacity: 0.2;
   transition: all 0.3s ease;
