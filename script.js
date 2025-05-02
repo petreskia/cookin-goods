@@ -133,7 +133,6 @@ document.addEventListener("DOMContentLoaded", () => {
       startX = e.pageX - slider.offsetLeft;
       scrollLeft = slider.scrollLeft;
       slider.style.scrollBehavior = "auto";
-      // slider.style.cursor = "grabbing";
       e.preventDefault();
     });
 
@@ -233,10 +232,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Cursor
 if (window.innerWidth >= 992) {
   const cursor = document.querySelector(".custom-cursor");
   const sliders = document.querySelectorAll(".projects-slider");
+  const footer = document.querySelector("footer");
 
   // Move the cursor with mouse
   document.addEventListener("mousemove", (e) => {
@@ -251,8 +250,7 @@ if (window.innerWidth >= 992) {
     });
 
     slider.addEventListener("mouseleave", () => {
-      cursor.classList.remove("slider-hover");
-      cursor.classList.remove("arrow-active");
+      cursor.classList.remove("slider-hover", "arrow-active");
       cursor.textContent = "";
     });
 
@@ -293,6 +291,17 @@ if (window.innerWidth >= 992) {
       slider.dispatchEvent(mouseEvent);
     });
   });
+
+  // Footer hover effect
+  if (footer) {
+    footer.addEventListener("mouseenter", () => {
+      cursor.classList.add("footer-hover");
+    });
+
+    footer.addEventListener("mouseleave", () => {
+      cursor.classList.remove("footer-hover");
+    });
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

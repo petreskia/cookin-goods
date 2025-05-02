@@ -659,6 +659,13 @@ img {
   z-index: 9999;
 }
 
+/* Footer hover state */
+.custom-cursor.footer-hover {
+  background-color: #ffffff; /* white */
+  color: #d33233; /* red text if needed */
+  border: 2px solid #d33233; /* optional border for contrast */
+}
+
 /* Larger cursor with arrow */
 .custom-cursor.arrow-active {
   width: 50px; /* Larger size when arrow is active */
@@ -864,8 +871,9 @@ img {
 }
 
 /* Hover Effects */
-.text-slider > div:hover h3 {
-  opacity: 0.8;
+.text-slider > div:hover h3,
+.text-slider > div:hover p {
+  opacity: 1;
 }
 
 /* Underline Animation */
