@@ -20,6 +20,7 @@ body {
   line-height: 1.2;
   overflow-x: hidden; /* Prevent horizontal scrolling */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  cursor: none !important;
 }
 
 html {
@@ -646,7 +647,7 @@ img {
   height: 20px;
   border-radius: 50%;
   background-color: #d33233;
-  color: black;
+  color: #fdfdfc;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -844,7 +845,7 @@ img {
 }
 .text-slider span {
   display: none;
-  font-size: 12px;
+  font-size: 16px;
 }
 .text-slider div p {
   display: block;
@@ -953,7 +954,7 @@ img {
     font-size: 16px;
   }
   .text-slider span {
-    font-size: 14px;
+    font-size: 18px;
   }
 
   .slider-progress {
@@ -997,7 +998,7 @@ img {
     font-size: 18px;
   }
   .text-slider span {
-    font-size: 16px;
+    font-size: 22px;
   }
 }
 
