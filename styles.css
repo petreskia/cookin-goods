@@ -109,7 +109,7 @@ img {
 
 .banner-content h2 {
   font-size: 28px;
-  line-height: 1.1;
+  line-height: 1.05;
   font-weight: 200;
   margin: 0 auto;
   text-align: start;
@@ -140,7 +140,9 @@ img {
 /* Desktop styles */
 @media (min-width: 1024px) {
   .banner-content {
-    width: 90%;
+    width: 82%;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .banner-content h2 {
@@ -841,6 +843,18 @@ img {
   color: #fdfdfc;
   opacity: 0.2;
   transition: all 0.3s ease;
+}
+.text-slider div span {
+  display: none;
+}
+.text-slider div p {
+  display: block;
+}
+.text-slider div h3.activ-text + p {
+  display: none;
+}
+.text-slider div h3.activ-text ~ span {
+  display: inline;
 }
 
 .text-slider h3.activ-text,

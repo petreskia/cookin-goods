@@ -1,19 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
   // ===== Performance Utilities =====
-  const debounce = (func, wait = 20, immediate = true) => {
-    let timeout;
-    return function (...args) {
-      const context = this;
-      const later = () => {
-        timeout = null;
-        if (!immediate) func.apply(context, args);
-      };
-      const callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-      if (callNow) func.apply(context, args);
-    };
-  };
+  // const debounce = (func, wait = 20, immediate = true) => {
+  //   let timeout;
+  //   return function (...args) {
+  //     const context = this;
+  //     const later = () => {
+  //       timeout = null;
+  //       if (!immediate) func.apply(context, args);
+  //     };
+  //     const callNow = immediate && !timeout;
+  //     clearTimeout(timeout);
+  //     timeout = setTimeout(later, wait);
+  //     if (callNow) func.apply(context, args);
+  //   };
+  // };
 
   // ===== Project Sliders Enhancement =====
   const sliders = document.querySelectorAll(".projects-slider");
@@ -141,14 +141,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isDragging) {
         isDragging = false;
         slider.style.scrollBehavior = "smooth";
-        // slider.style.cursor = "grab";
       }
     });
 
     slider.addEventListener("mouseup", () => {
       isDragging = false;
       slider.style.scrollBehavior = "smooth";
-      // slider.style.cursor = "grab";
 
       if (!isMobileOrTablet) {
         const scrollAmount = getScrollAmount();
@@ -297,200 +295,128 @@ if (window.innerWidth >= 992) {
   });
 }
 
-// Carousel
 document.addEventListener("DOMContentLoaded", () => {
-  const buttons = document.querySelectorAll(".slider-btn");
-  const contentItems = document.querySelectorAll(".content-item");
-
-  // Function to set active content
-  function setActiveContent(category) {
-    // Remove active class from all buttons and content items
-    buttons.forEach((btn) => btn.classList.remove("active"));
-    contentItems.forEach((item) => item.classList.remove("active"));
-
-    // Add active class to selected button
-    const activeButton = document.querySelector(
-      `.slider-btn[data-category="${category}"]`
-    );
-    if (activeButton) {
-      activeButton.classList.add("active");
-    }
-
-    // Add active class to corresponding content item
-    const activeContent = document.getElementById(category);
-    if (activeContent) {
-      activeContent.classList.add("active");
-    }
-  }
-
-  // Add click event listeners to all buttons
-  buttons.forEach((button) => {
-    button.addEventListener("click", function () {
-      const category = this.getAttribute("data-category");
-      setActiveContent(category);
-    });
-  });
-
-  // Auto-rotate through slides every 5 seconds
-  let currentIndex = 0;
-  const categories = Array.from(buttons).map((btn) =>
-    btn.getAttribute("data-category")
-  );
-
-  function autoRotate() {
-    currentIndex = (currentIndex + 1) % categories.length;
-    setActiveContent(categories[currentIndex]);
-  }
-
-  // Start auto-rotation
-  const intervalId = setInterval(autoRotate, 5000);
-
-  // Stop auto-rotation when user interacts with buttons
-  buttons.forEach((button) => {
-    button.addEventListener("click", function () {
-      clearInterval(intervalId);
-      // Update current index based on clicked button
-      currentIndex = categories.indexOf(this.getAttribute("data-category"));
-    });
-  });
-});
-
-const sliderSection = document.querySelector(".slider-section");
-const images = document.querySelectorAll(".images-slider > div");
-const textOptions = document.querySelectorAll(".text-slider > div");
-
-function activateSlide(index) {
-  // Update images - show only the selected one
-  images.forEach((imgDiv, i) => {
-    imgDiv.classList.toggle("active", i === index);
-    imgDiv.classList.toggle("hidden", i !== index);
-  });
-
-  // Update text options - make only the selected one active
-  textOptions.forEach((textDiv, i) => {
-    const h3 = textDiv.querySelector("h3");
-    const p = textDiv.querySelector("p");
-
-    if (i === index) {
-      h3.classList.add("activ-text");
-      p.classList.add("activ-text");
-    } else {
-      h3.classList.remove("activ-text");
-      p.classList.remove("activ-text");
-    }
-  });
-}
-
-// Add click event listeners to each text option
-textOptions.forEach((textOption, index) => {
-  textOption.addEventListener("click", () => {
-    activateSlide(index);
-  });
-
-  // Make text options appear clickable
-  textOption.style.cursor = "pointer";
-});
-
-// Intersection observer to detect when slider-section is in view
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        activateSlide(0); // Activate first slide when section comes into view
-      }
-    });
-  },
-  {
-    threshold: 0.4, // Trigger when 40% is visible
-  }
-);
-
-observer.observe(sliderSection);
-
-// Initialize the first slide as active
-activateSlide(0);
-
-// Add this to your existing JavaScript to create progress indicators
-document.addEventListener("DOMContentLoaded", () => {
-  // Create progress indicators
-  const textOptions = document.querySelectorAll(".text-slider > div");
   const sliderSection = document.querySelector(".slider-section");
+  const images = document.querySelectorAll(".images-slider > div");
+  const textOptions = document.querySelectorAll(".text-slider > div");
 
-  // Create progress container if it doesn't exist
-  if (!document.querySelector(".slider-progress")) {
-    const progressContainer = document.createElement("div");
-    progressContainer.className = "slider-progress";
+  // Create and append progress dots
+  const createProgressDots = () => {
+    if (!document.querySelector(".slider-progress")) {
+      const progressContainer = document.createElement("div");
+      progressContainer.className = "slider-progress";
 
-    // Create a dot for each slide
-    textOptions.forEach((_, index) => {
-      const dot = document.createElement("div");
-      dot.className = "slider-progress-dot";
-      if (index === 0) dot.classList.add("active");
+      textOptions.forEach((_, index) => {
+        const dot = document.createElement("div");
+        dot.className = "slider-progress-dot";
+        if (index === 0) dot.classList.add("active");
 
-      // Add click event to each dot
-      dot.addEventListener("click", () => {
-        activateSlide(index);
+        dot.addEventListener("click", () => activateSlide(index));
+        progressContainer.appendChild(dot);
       });
 
-      progressContainer.appendChild(dot);
-    });
-
-    sliderSection.appendChild(progressContainer);
-  }
-
-  // Update the original activateSlide function to also update progress dots
-  const originalActivateSlide = window.activateSlide;
-
-  window.activateSlide = (index) => {
-    // Call the original function
-    originalActivateSlide(index);
-
-    // Update progress dots
-    const dots = document.querySelectorAll(".slider-progress-dot");
-    dots.forEach((dot, i) => {
-      dot.classList.toggle("active", i === index);
-    });
+      sliderSection.appendChild(progressContainer);
+    }
   };
 
-  // Add keyboard navigation
-  document.addEventListener("keydown", (e) => {
-    if (!document.querySelector(".slider-section:hover")) return;
+  const updateTextVisibility = (textDiv, isActive) => {
+    const h3 = textDiv.querySelector("h3");
+    const p = textDiv.querySelector("p");
+    const span = textDiv.querySelector("span");
 
-    const activeIndex = Array.from(textOptions).findIndex((div) =>
-      div.querySelector("h3.activ-text")
-    );
-
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-      const nextIndex = (activeIndex + 1) % textOptions.length;
-      activateSlide(nextIndex);
-    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-      const prevIndex =
-        (activeIndex - 1 + textOptions.length) % textOptions.length;
-      activateSlide(prevIndex);
+    if (isActive) {
+      h3.classList.add("activ-text");
+      span.classList.remove("d-none");
+      p.classList.add("d-none");
+    } else {
+      h3.classList.remove("activ-text");
+      span.classList.add("d-none");
+      p.classList.remove("d-none");
     }
-  });
+  };
 
-  // Make text options keyboard focusable
-  textOptions.forEach((option) => {
-    option.setAttribute("tabindex", "0");
-    option.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
+  // Main activation logic
+  const activateSlide = (index) => {
+    images.forEach((imgDiv, i) => {
+      imgDiv.classList.toggle("active", i === index);
+      imgDiv.classList.toggle("hidden", i !== index);
+    });
+
+    textOptions.forEach((textDiv, i) => {
+      updateTextVisibility(textDiv, i === index);
+    });
+
+    document
+      .querySelectorAll(".slider-progress-dot")
+      .forEach((dot, i) => dot.classList.toggle("active", i === index));
+
+    currentIndex = index;
+  };
+
+  // Make text options interactive
+  textOptions.forEach((textDiv, index) => {
+    textDiv.style.cursor = "pointer";
+    textDiv.setAttribute("tabindex", "0");
+
+    textDiv.addEventListener("click", () => activateSlide(index));
+    textDiv.addEventListener("keydown", (e) => {
+      if (["Enter", " "].includes(e.key)) {
         e.preventDefault();
-        const index = Array.from(textOptions).indexOf(option);
         activateSlide(index);
       }
     });
   });
 
-  // Show progress dots on mobile
-  const mediaQuery = window.matchMedia("(max-width: 767px)");
-  function handleScreenChange(e) {
-    const progressContainer = document.querySelector(".slider-progress");
-    if (progressContainer) {
-      progressContainer.style.display = e.matches ? "flex" : "none";
-    }
-  }
+  // Keyboard navigation (only if slider-section hovered)
+  document.addEventListener("keydown", (e) => {
+    if (!sliderSection.matches(":hover")) return;
 
-  mediaQuery.addEventListener("change", handleScreenChange);
-  handleScreenChange(mediaQuery);
+    if (["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp"].includes(e.key)) {
+      const nextIndex =
+        e.key === "ArrowRight" || e.key === "ArrowDown"
+          ? (currentIndex + 1) % textOptions.length
+          : (currentIndex - 1 + textOptions.length) % textOptions.length;
+
+      activateSlide(nextIndex);
+    }
+  });
+
+  // Show/hide progress dots on mobile only
+  const handleMobileDots = (e) => {
+    const dots = document.querySelector(".slider-progress");
+    if (dots) dots.style.display = e.matches ? "flex" : "none";
+  };
+
+  const mediaQuery = window.matchMedia("(max-width: 767px)");
+  mediaQuery.addEventListener("change", handleMobileDots);
+
+  // Auto-rotate
+  let currentIndex = 0;
+  const autoInterval = setInterval(() => {
+    currentIndex = (currentIndex + 1) % textOptions.length;
+    activateSlide(currentIndex);
+  }, 5000);
+
+  // Stop auto-rotate on manual interaction
+  textOptions.forEach((div, index) => {
+    div.addEventListener("click", () => {
+      clearInterval(autoInterval);
+      currentIndex = index;
+    });
+  });
+
+  // Intersection Observer to trigger first slide
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) activateSlide(0);
+      });
+    },
+    { threshold: 0.4 }
+  );
+
+  observer.observe(sliderSection);
+  createProgressDots();
+  handleMobileDots(mediaQuery);
+  activateSlide(0);
 });
